@@ -401,7 +401,7 @@ export const DEFAULT_INVITATION_DATA: InvitationData = {
   pdfAttachmentUrl: null,
   pdfFileName: 'Cartilha_IRPJ_40_Anos_Lavagem_PRONAC_264180.pdf',
   pdfLinkUrl: '',
-  showPdfButton: true,
+  showPdfButton: false,
   pdfButtonLabel: 'Ver Cartilha IRPJ / Proposta (PDF)'
 };
 
