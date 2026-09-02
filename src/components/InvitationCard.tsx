@@ -214,42 +214,31 @@ export const InvitationCard: React.FC<InvitationCardProps> = ({
           </p>
         )}
 
-        {/* Custom Sponsor Logo Slot (if provided or placeholder) */}
-        {data.showSponsorSlot && (
+        {/* Custom Sponsor Logo Slot: only rendered once a sponsor logo exists,
+            so the card stays clean while no brand is attached. */}
+        {data.showSponsorSlot && data.customLogoUrl && (
           <div className="mt-2.5 sm:mt-3 flex items-center justify-center gap-3">
-            {data.customLogoUrl ? (
-              <div
-                className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg backdrop-blur-md flex items-center gap-2 ${
-                  isLight
-                    ? 'bg-white/95 border border-amber-500/50 shadow-sm'
-                    : 'bg-stone-900/90 border border-amber-400/40 shadow-md'
+            <div
+              className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg backdrop-blur-md flex items-center gap-2 ${
+                isLight
+                  ? 'bg-white/95 border border-amber-500/50 shadow-sm'
+                  : 'bg-stone-900/90 border border-amber-400/40 shadow-md'
+              }`}
+            >
+              <span
+                className={`text-[9px] sm:text-[10px] uppercase font-bold ${
+                  isLight ? 'text-amber-800' : 'text-amber-300/80'
                 }`}
               >
-                <span
-                  className={`text-[9px] sm:text-[10px] uppercase font-bold ${
-                    isLight ? 'text-amber-800' : 'text-amber-300/80'
-                  }`}
-                >
-                  Parceria:
-                </span>
-                <img
-                  src={data.customLogoUrl}
-                  alt="Logo do Patrocinador"
-                  referrerPolicy="no-referrer"
-                  className="h-6 sm:h-7 max-w-[90px] sm:max-w-[110px] object-contain"
-                />
-              </div>
-            ) : (
-              <div
-                className={`px-2.5 sm:px-3 py-1 rounded-lg border border-dashed text-[10px] sm:text-[11px] font-montserrat ${
-                  isLight
-                    ? 'bg-white/80 border-amber-600/40 text-amber-900/80 shadow-xs'
-                    : 'bg-stone-900/60 border-amber-400/30 text-amber-200/80'
-                }`}
-              >
-                Espaço Exclusivo para a Sua Marca
-              </div>
-            )}
+                Parceria:
+              </span>
+              <img
+                src={data.customLogoUrl}
+                alt="Logo do Patrocinador"
+                referrerPolicy="no-referrer"
+                className="h-6 sm:h-7 max-w-[90px] sm:max-w-[110px] object-contain"
+              />
+            </div>
           </div>
         )}
         {/* Interactive PDF Attachment Button (Clickable when shared / previewed) */}
