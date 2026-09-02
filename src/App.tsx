@@ -140,13 +140,15 @@ export default function App() {
     }
   };
 
-  // Message body shared by the native share sheet and the WhatsApp fallback.
-  const buildInvitationMessage = (pdfIsAttached: boolean) => {
-    const pdfNote = pdfIsAttached
-      ? `\n📄 *Mídia Kit Comercial em PDF anexado nesta mensagem.*\n`
-      : data.pdfLinkUrl
-        ? `\n📄 *Mídia Kit Comercial em PDF:* ${data.pdfLinkUrl}\n`
-        : `\n📄 *Mídia Kit Oficial em PDF disponível com a Comissão Organizadora*\n`;
+  // Headline used on the native share sheet: the attached PDF carries the rest,
+  // so the message stays short next to the file.
+  const shareHeadline = '🏛️ CONVITE 40 ANOS DA LAVAGEM DA ESQUINA DO PADRE - CAETITÉ/BA';
+
+  // Full message, used where no file can be attached.
+  const buildInvitationMessage = () => {
+    const pdfNote = data.pdfLinkUrl
+      ? `\n📄 *Mídia Kit Comercial em PDF:* ${data.pdfLinkUrl}\n`
+      : `\n📄 *Mídia Kit Oficial em PDF disponível com a Comissão Organizadora*\n`;
 
     return (
       `🏛️ *CONVITE 40 ANOS DA LAVAGEM DA ESQUINA DO PADRE - CAETITÉ/BA*\n\n` +
@@ -161,7 +163,7 @@ export default function App() {
   };
 
   const handleQuickWhatsApp = () => {
-    const text = encodeURIComponent(buildInvitationMessage(false));
+    const text = encodeURIComponent(buildInvitationMessage());
     window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
   };
 
@@ -179,7 +181,7 @@ export default function App() {
         await navigator.share({
           files: [file],
           title: 'Convite 40 Anos da Lavagem da Esquina do Padre',
-          text: buildInvitationMessage(true),
+          text: shareHeadline,
         });
         return;
       }

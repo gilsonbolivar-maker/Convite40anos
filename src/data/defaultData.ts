@@ -397,6 +397,7 @@ export const DEFAULT_INVITATION_DATA: InvitationData = {
   showSponsorSlot: true,
   showTierBadge: true,
   showContactBar: true,
+  transparentBackground: false,
   pdfAttachmentUrl: null,
   pdfFileName: 'Cartilha_IRPJ_40_Anos_Lavagem_PRONAC_264180.pdf',
   pdfLinkUrl: '',

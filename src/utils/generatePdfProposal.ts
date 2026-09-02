@@ -80,9 +80,12 @@ export const generateOfficialProposalPdf = (
     const ix = (pw - iw) / 2;
     const iy = 16 + (artMaxH - ih) / 2;
 
-    // White mat behind the artwork so any transparency stays legible
-    doc.setFillColor(255, 255, 255);
-    doc.roundedRect(ix - 2.5, iy - 2.5, iw + 5, ih + 5, 2, 2, 'F');
+    // A transparent card is drawn for light text, so it keeps the navy page
+    // behind it; an opaque card gets a white mat to sit on.
+    if (!data.transparentBackground) {
+      doc.setFillColor(255, 255, 255);
+      doc.roundedRect(ix - 2.5, iy - 2.5, iw + 5, ih + 5, 2, 2, 'F');
+    }
     doc.addImage(artworkDataUrl, 'PNG', ix, iy, iw, ih, undefined, 'FAST');
 
     doc.setFont('helvetica', 'bold');

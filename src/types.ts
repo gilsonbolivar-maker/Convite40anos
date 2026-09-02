@@ -51,6 +51,8 @@ export interface InvitationData {
   showSponsorSlot: boolean;
   showTierBadge: boolean;
   showContactBar: boolean;
+  /** Drops the painted background so the exported PNG keeps an alpha channel. */
+  transparentBackground: boolean;
   // PDF Attachment & Link capabilities
   pdfAttachmentUrl: string | null;
   pdfFileName: string;

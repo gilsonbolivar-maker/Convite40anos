@@ -44,19 +44,24 @@ export const InvitationCard: React.FC<InvitationCardProps> = ({
       id="invitation-card-capture"
       className={`relative overflow-hidden ${
         isLight ? 'text-[#2d2926]' : 'text-stone-100'
-      } flex flex-col justify-between p-4 sm:p-5 md:p-5 rounded-2xl sm:rounded-3xl shadow-2xl transition-all duration-300 select-none ${getFormatClasses()} ${className}`}
+      } flex flex-col justify-between p-4 sm:p-5 md:p-5 rounded-2xl sm:rounded-3xl ${
+        data.transparentBackground ? '' : 'shadow-2xl'
+      } transition-all duration-300 select-none ${getFormatClasses()} ${className}`}
       style={{
         transform: previewScale !== 1 ? `scale(${previewScale})` : undefined,
         transformOrigin: 'top center'
       }}
     >
-      {/* Background artwork / custom image */}
-      <FestiveArtworkCanvas
-        theme={data.theme}
-        customBgUrl={data.backgroundImageUrl}
-        overlayOpacity={data.backgroundOverlayOpacity}
-        blur={data.backgroundBlur}
-      />
+      {/* Background artwork / custom image. Skipped when the card is exported
+          with a transparent background, so only the frame and text are painted. */}
+      {!data.transparentBackground && (
+        <FestiveArtworkCanvas
+          theme={data.theme}
+          customBgUrl={data.backgroundImageUrl}
+          overlayOpacity={data.backgroundOverlayOpacity}
+          blur={data.backgroundBlur}
+        />
+      )}
 
       {/* Ornate Gold Border Inner Frame */}
       <div
