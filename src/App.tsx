@@ -7,6 +7,7 @@ import { CardEditor } from './components/CardEditor';
 import { ProposalModal } from './components/ProposalModal';
 import { MetricsModal } from './components/MetricsModal';
 import { PdfViewerModal } from './components/PdfViewerModal';
+import { generateOfficialProposalPdf } from './utils/generatePdfProposal';
 import { toPng } from 'html-to-image';
 import confetti from 'canvas-confetti';
 import {
@@ -16,7 +17,6 @@ import {
   Minimize2,
   Sparkles,
   Phone,
-  MessageCircle,
   Copy,
   Check,
   Building2,
@@ -35,6 +35,7 @@ export default function App() {
   const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [copiedQuick, setCopiedQuick] = useState(false);
+  const [isSharing, setIsSharing] = useState(false);
   const [mobileTab, setMobileTab] = useState<'preview' | 'editor'>('preview');
   const [calculatedScale, setCalculatedScale] = useState<number>(1);
 
@@ -139,12 +140,15 @@ export default function App() {
     }
   };
 
-  const handleQuickWhatsApp = () => {
-    const pdfNote = data.pdfLinkUrl
-      ? `\n📄 *Mídia Kit Comercial em PDF:* ${data.pdfLinkUrl}\n`
-      : `\n📄 *Mídia Kit Oficial em PDF disponível com a Comissão Organizadora*\n`;
+  // Message body shared by the native share sheet and the WhatsApp fallback.
+  const buildInvitationMessage = (pdfIsAttached: boolean) => {
+    const pdfNote = pdfIsAttached
+      ? `\n📄 *Mídia Kit Comercial em PDF anexado nesta mensagem.*\n`
+      : data.pdfLinkUrl
+        ? `\n📄 *Mídia Kit Comercial em PDF:* ${data.pdfLinkUrl}\n`
+        : `\n📄 *Mídia Kit Oficial em PDF disponível com a Comissão Organizadora*\n`;
 
-    const text = encodeURIComponent(
+    return (
       `🏛️ *CONVITE 40 ANOS DA LAVAGEM DA ESQUINA DO PADRE - CAETITÉ/BA*\n\n` +
       `Olá! Gostaríamos de convidar a empresa *${data.recipientCompany}* para fazer parte desse momento histórico:\n\n` +
       `✨ *"${data.mainHeadline}"*\n` +
@@ -154,7 +158,41 @@ export default function App() {
       pdfNote +
       `📲 Para saber mais sobre as cotas de patrocínio, fale conosco pelo WhatsApp: ${data.organizerPhone}`
     );
+  };
+
+  const handleQuickWhatsApp = () => {
+    const text = encodeURIComponent(buildInvitationMessage(false));
     window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+  };
+
+  // Shares the invitation through the device's native share sheet with the PDF
+  // attached, so WhatsApp and e-mail carry the artwork and the media kit in one
+  // step. Desktop browsers cannot share files, so they fall back to WhatsApp text.
+  const handleShare = async () => {
+    setIsSharing(true);
+    try {
+      const artwork = await captureCardPng();
+      const { blob, fileName } = generateOfficialProposalPdf(data, artwork);
+      const file = new File([blob], fileName, { type: 'application/pdf' });
+
+      if (navigator.canShare?.({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: 'Convite 40 Anos da Lavagem da Esquina do Padre',
+          text: buildInvitationMessage(true),
+        });
+        return;
+      }
+
+      handleQuickWhatsApp();
+    } catch (err) {
+      // Dismissing the share sheet is a normal outcome, not a failure.
+      if ((err as Error)?.name === 'AbortError') return;
+      console.error('Error sharing invitation:', err);
+      handleQuickWhatsApp();
+    } finally {
+      setIsSharing(false);
+    }
   };
 
   const handleCopyShortText = async () => {
@@ -346,11 +384,13 @@ export default function App() {
 
               <button
                 type="button"
-                onClick={handleQuickWhatsApp}
-                className="w-full py-3 px-3 rounded-xl bg-[#285c3f] hover:bg-[#1e4630] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-emerald-950/20 transition-all active:scale-95 min-h-[44px]"
+                onClick={handleShare}
+                disabled={isSharing}
+                title="Compartilhar o convite com o PDF anexado"
+                className="w-full py-3 px-3 rounded-xl bg-[#285c3f] hover:bg-[#1e4630] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-emerald-950/20 transition-all active:scale-95 disabled:opacity-60 disabled:cursor-wait min-h-[44px]"
               >
-                <MessageCircle className="w-4 h-4 shrink-0" />
-                <span className="truncate">Enviar WhatsApp</span>
+                <Share2 className="w-4 h-4 shrink-0" />
+                <span className="truncate">{isSharing ? 'Preparando...' : 'Compartilhar'}</span>
               </button>
 
               <button
