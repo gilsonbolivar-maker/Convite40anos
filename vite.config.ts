@@ -5,6 +5,9 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
+    // GitHub Pages serves this project from https://<user>.github.io/Convite40anos/,
+    // so built assets must be referenced relative to that sub-path.
+    base: process.env.PUBLIC_BASE_PATH || '/',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
