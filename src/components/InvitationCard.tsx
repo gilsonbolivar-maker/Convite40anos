@@ -1,9 +1,9 @@
 import React from 'react';
 import { InvitationData } from '../types';
-import { SPONSOR_TIERS, COLOR_PALETTES, isThemeLight } from '../data/defaultData';
+import { COLOR_PALETTES, isThemeLight } from '../data/defaultData';
 import { OfficialEmblem } from './OfficialEmblem';
 import { FestiveArtworkCanvas } from './FestiveArtworkCanvas';
-import { Sparkles, Award, FileText } from 'lucide-react';
+import { Sparkles, FileText } from 'lucide-react';
 
 interface InvitationCardProps {
   data: InvitationData;
@@ -20,7 +20,6 @@ export const InvitationCard: React.FC<InvitationCardProps> = ({
   onOpenPdf,
   className = ''
 }) => {
-  const currentTier = SPONSOR_TIERS.find(t => t.id === data.selectedTier) || SPONSOR_TIERS[1];
   const palette = COLOR_PALETTES.find(p => p.id === data.theme) || COLOR_PALETTES[0];
   const isLight = isThemeLight(data.theme);
 
@@ -112,39 +111,8 @@ export const InvitationCard: React.FC<InvitationCardProps> = ({
             />
             <span className="truncate">Convite Empresarial</span>
           </div>
-          {data.recipientCompany && (
-            <p
-              className={`mt-1 sm:mt-1.5 text-[10px] sm:text-xs font-montserrat tracking-wide truncate max-w-[200px] sm:max-w-xs ${
-                isLight ? 'text-[#4a4540]' : 'text-amber-100/90'
-              }`}
-            >
-              Para:{' '}
-              <strong className={isLight ? 'text-[#1c1917] font-bold' : 'text-white font-semibold'}>
-                {data.recipientCompany}
-              </strong>
-            </p>
-          )}
         </div>
 
-        {/* Tier badge or celebration medal */}
-        {data.showTierBadge && (
-          <div
-            className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full backdrop-blur-md shadow-md shrink-0 ${
-              isLight
-                ? 'bg-gradient-to-r from-amber-100 via-amber-50 to-amber-200 border border-amber-500/60 text-amber-900'
-                : 'bg-gradient-to-r from-amber-500/30 to-amber-700/40 border border-amber-400/50 text-amber-200'
-            }`}
-          >
-            <Award className={`w-3 sm:w-3.5 h-3 sm:h-3.5 ${isLight ? 'text-amber-700' : 'text-amber-300'}`} />
-            <span
-              className={`text-[10px] sm:text-[11px] font-bold uppercase tracking-wider ${
-                isLight ? 'text-amber-900' : 'text-amber-200'
-              }`}
-            >
-              {currentTier.badge}
-            </span>
-          </div>
-        )}
       </div>
 
       {/* CENTER SECTION - OFFICIAL EMBLEM & REQUIRED INVITATION PHRASES */}
