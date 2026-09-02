@@ -1,22 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { InvitationData } from '../types';
 import { generateOfficialProposalPdf } from '../utils/generatePdfProposal';
-import {
-  X,
-  Download,
-  ExternalLink,
-  FileText,
-  Sparkles,
-  Check,
-  Copy,
-  ChevronLeft,
-  ChevronRight,
-  Maximize2,
-  Minimize2,
-  ShieldCheck,
-  BookOpen,
-  LayoutGrid
-} from 'lucide-react';
+import { X, Download } from 'lucide-react';
 
 interface PdfViewerModalProps {
   isOpen: boolean;
@@ -34,10 +19,8 @@ export const PdfViewerModal: React.FC<PdfViewerModalProps> = ({
   onCaptureArtwork
 }) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [viewMode, setViewMode] = useState<'visual' | 'rawPdf'>('visual');
   const [activePdfUrl, setActivePdfUrl] = useState<string | null>(null);
   const [activeFileName, setActiveFileName] = useState<string>('Cartilha_IRPJ_40_Anos_Lavagem_PRONAC.pdf');
-  const [copiedLink, setCopiedLink] = useState(false);
   const [artworkDataUrl, setArtworkDataUrl] = useState<string | null>(null);
   const [isPreparing, setIsPreparing] = useState(false);
 
@@ -101,29 +84,6 @@ export const PdfViewerModal: React.FC<PdfViewerModalProps> = ({
     document.body.removeChild(a);
   };
 
-  const handleOpenNewTab = () => {
-    if (activePdfUrl) {
-      window.open(activePdfUrl, '_blank', 'noopener,noreferrer');
-    } else {
-      const { url } = generateOfficialProposalPdf(data, artworkDataUrl);
-      window.open(url, '_blank', 'noopener,noreferrer');
-    }
-  };
-
-  const handleCopyLink = async () => {
-    const linkToCopy = data.pdfLinkUrl || activePdfUrl;
-    if (!linkToCopy) return;
-
-    if (navigator.clipboard) {
-      await navigator.clipboard.writeText(linkToCopy);
-      setCopiedLink(true);
-      setTimeout(() => setCopiedLink(false), 2200);
-    }
-  };
-
-  // The artwork cover sits before the Cartilha, so it is page 0 when available.
-  const firstPage = artworkDataUrl ? 0 : 1;
-
   if (!isOpen) return null;
 
   return (
@@ -132,182 +92,71 @@ export const PdfViewerModal: React.FC<PdfViewerModalProps> = ({
         className="relative w-full max-w-5xl h-[95vh] max-h-[920px] bg-[#1a1c23] text-stone-100 rounded-2xl sm:rounded-3xl shadow-2xl border border-amber-400/40 flex flex-col overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Top Navigation Bar */}
-        <div className="flex items-center justify-between px-3 sm:px-6 py-3 bg-[#132238] border-b border-amber-500/30 text-white shrink-0">
-          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-            <div className="p-2 rounded-xl bg-amber-500/20 border border-amber-400/30 text-amber-400 shrink-0">
-              <BookOpen className="w-5 h-5" />
-            </div>
-            <div className="min-w-0">
-              <div className="flex items-center gap-2">
-                <h3 className="font-cinzel text-xs sm:text-sm md:text-base font-bold text-amber-200 truncate">
-                  Cartilha: Direcionamento do Imposto de Renda
-                </h3>
-                <span className="hidden sm:inline-block px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-300 text-[10px] font-mono font-bold tracking-wider">
-                  PRONAC 264180
-                </span>
-              </div>
-              <p className="text-[11px] text-stone-300 truncate font-montserrat">
-                40 Anos da Lavagem da Esquina do Padre • Artigo 18 (Lucro Real)
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            {/* View Mode Toggle */}
-            <div className="hidden sm:flex items-center bg-black/40 rounded-xl p-0.5 border border-stone-700 text-xs">
-              <button
-                type="button"
-                onClick={() => setViewMode('visual')}
-                className={`px-2.5 py-1 rounded-lg font-medium transition-all ${
-                  viewMode === 'visual'
-                    ? 'bg-amber-500 text-stone-950 font-bold shadow-xs'
-                    : 'text-stone-300 hover:text-white'
-                }`}
-              >
-                Guia Visual (HD)
-              </button>
-              <button
-                type="button"
-                onClick={() => setViewMode('rawPdf')}
-                className={`px-2.5 py-1 rounded-lg font-medium transition-all ${
-                  viewMode === 'rawPdf'
-                    ? 'bg-amber-500 text-stone-950 font-bold shadow-xs'
-                    : 'text-stone-300 hover:text-white'
-                }`}
-              >
-                Arquivo PDF
-              </button>
-            </div>
-
-            <button
-              onClick={handleOpenNewTab}
-              title="Abrir em nova aba"
-              className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-amber-200 transition-colors flex items-center gap-1.5 text-xs font-medium"
-            >
-              <ExternalLink className="w-4 h-4" />
-              <span className="hidden md:inline">Nova Aba</span>
-            </button>
-
-            <button
-              onClick={handleDownload}
-              disabled={isPreparing}
-              title="Baixar o convite e a Cartilha em um unico PDF"
-              className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 disabled:opacity-60 disabled:cursor-wait text-stone-950 font-bold transition-all flex items-center gap-1.5 text-xs shadow-md"
-            >
-              <Download className="w-4 h-4" />
-              <span className="hidden sm:inline">
-                {isPreparing
-                  ? 'Montando PDF...'
-                  : artworkDataUrl
-                    ? 'Baixar PDF (Arte + 6 Págs)'
-                    : 'Baixar PDF (6 Págs)'}
-              </span>
-            </button>
-
-            <button
-              onClick={onClose}
-              className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors ml-1"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-        </div>
-
-        {/* Prominent Page Selector & Sub-bar directly above the PDF */}
-        <div className="px-3 sm:px-6 py-2.5 sm:py-3 bg-[#0a101a] border-b-2 border-amber-500/40 flex flex-wrap items-center justify-between gap-2.5 text-xs shrink-0 shadow-inner">
-          {/* Prominent Page Numbers Buttons */}
-          <div className="flex items-center gap-1.5 sm:gap-2.5">
-            <span className="text-amber-400 text-xs sm:text-sm font-black uppercase tracking-wider font-cinzel flex items-center gap-1.5 mr-1">
-              <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-              PÁGINAS:
+        {/* Top bar: page switching only, per the simplified reading flow */}
+        <div className="flex items-center gap-2 px-3 sm:px-5 py-3 bg-[#132238] border-b border-amber-500/30 shrink-0">
+          <div className="flex-1 flex items-center gap-1.5 sm:gap-2 overflow-x-auto">
+            <span className="shrink-0 mr-1 font-cinzel text-[11px] sm:text-sm font-black uppercase tracking-wider text-amber-400">
+              Páginas:
             </span>
+
             {[
-              ...(artworkDataUrl ? [{ num: 0, label: '00 • Arte' }] : []),
-              { num: 1, label: '01 • Capa' },
-              { num: 2, label: '02 • A Lei' },
-              { num: 3, label: '03 • Cenários' },
-              { num: 4, label: '04 • Vantagens' },
-              { num: 5, label: '05 • Segurança' },
-              { num: 6, label: '06 • Como Aplicar' },
-            ].map((p) => {
-              const isSelected = currentPage === p.num;
+              ...(artworkDataUrl ? [{ num: 0, label: 'Arte' }] : []),
+              { num: 1, label: 'Capa' },
+              { num: 2, label: 'A Lei' },
+              { num: 3, label: 'Cenários' },
+              { num: 4, label: 'Vantagens' },
+              { num: 5, label: 'Segurança' },
+              { num: 6, label: 'Como Aplicar' },
+            ].map((pg) => {
+              const isSelected = currentPage === pg.num;
               return (
                 <button
-                  key={p.num}
+                  key={pg.num}
                   type="button"
-                  onClick={() => {
-                    setCurrentPage(p.num);
-                    setViewMode('visual');
-                  }}
-                  className={`relative px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-black transition-all shadow-md active:scale-95 flex items-center gap-1.5 ${
+                  onClick={() => setCurrentPage(pg.num)}
+                  title={`Ir para a Página ${pg.num}`}
+                  className={`shrink-0 flex items-center gap-1.5 rounded-xl px-2.5 sm:px-3.5 py-1.5 sm:py-2 text-xs sm:text-sm font-black shadow-md transition-all active:scale-95 ${
                     isSelected
-                      ? 'bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-stone-950 ring-2 ring-amber-300 scale-105 font-mono shadow-amber-500/30'
-                      : 'bg-[#192434] text-stone-200 hover:bg-[#223348] hover:text-amber-200 border border-stone-700/80 font-mono'
+                      ? 'bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-stone-950 ring-2 ring-amber-300 font-mono'
+                      : 'border border-stone-700/80 bg-[#192434] font-mono text-stone-200 hover:bg-[#223348] hover:text-amber-200'
                   }`}
-                  title={`Ir para a Página ${p.num}`}
                 >
-                  <span className="text-base sm:text-lg font-black">{p.num}</span>
-                  <span className="hidden md:inline text-[11px] font-sans font-semibold tracking-normal opacity-90">
-                    {p.label.split(' • ')[1]}
+                  <span className="text-sm sm:text-base font-black">{pg.num}</span>
+                  <span className="hidden md:inline font-sans text-[11px] font-semibold tracking-normal opacity-90">
+                    {pg.label}
                   </span>
-                  {isSelected && (
-                    <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-1 bg-amber-300 rounded-full" />
-                  )}
                 </button>
               );
             })}
           </div>
 
-          {/* Previous / Next and Current Page Badge */}
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              disabled={currentPage <= firstPage}
-              onClick={() => setCurrentPage((prev) => Math.max(firstPage, prev - 1))}
-              className="px-3 py-1.5 sm:py-2 rounded-xl bg-stone-800 hover:bg-stone-700 disabled:opacity-30 disabled:cursor-not-allowed text-stone-100 font-bold flex items-center gap-1 text-xs sm:text-sm transition-all border border-stone-700 active:scale-95"
-            >
-              <ChevronLeft className="w-4 h-4 text-amber-400" />
-              <span className="hidden sm:inline">Anterior</span>
-            </button>
+          <button
+            type="button"
+            onClick={onClose}
+            title="Fechar"
+            className="shrink-0 rounded-xl bg-white/10 p-2 text-white transition-colors hover:bg-white/20"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
 
-            <div className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl bg-amber-500/20 border border-amber-400/50 text-amber-200 font-mono text-xs sm:text-sm font-bold flex items-center gap-1.5 shadow-xs">
-              <span className="text-stone-400 text-[10px] sm:text-xs uppercase font-sans">PÁG</span>
-              <span className="text-amber-300 font-black text-sm sm:text-base">0{currentPage}</span>
-              <span className="text-stone-500">/</span>
-              <span className="text-stone-400 font-medium">06</span>
-            </div>
-
-            <button
-              type="button"
-              disabled={currentPage >= 6}
-              onClick={() => setCurrentPage((prev) => Math.min(6, prev + 1))}
-              className="px-3 py-1.5 sm:py-2 rounded-xl bg-stone-800 hover:bg-stone-700 disabled:opacity-30 disabled:cursor-not-allowed text-stone-100 font-bold flex items-center gap-1 text-xs sm:text-sm transition-all border border-stone-700 active:scale-95"
-            >
-              <span className="hidden sm:inline">Próxima</span>
-              <ChevronRight className="w-4 h-4 text-amber-400" />
-            </button>
-          </div>
+        {/* Download sits directly under the page switcher */}
+        <div className="flex justify-center border-b border-stone-800 bg-[#0a101a] px-3 py-2.5 shrink-0">
+          <button
+            type="button"
+            onClick={handleDownload}
+            disabled={isPreparing}
+            title="Baixar o convite e a Cartilha em um unico PDF"
+            className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-5 py-2 text-sm font-bold text-stone-950 shadow-md transition-all hover:from-amber-400 hover:to-amber-500 active:scale-95 disabled:cursor-wait disabled:opacity-60"
+          >
+            <Download className="w-4 h-4" />
+            {isPreparing ? 'Montando PDF...' : 'Baixar PDF'}
+          </button>
         </div>
 
         {/* Content Viewer Body */}
         <div className="flex-1 bg-[#1a1c23] overflow-y-auto p-3 sm:p-6 flex items-center justify-center">
-          {viewMode === 'rawPdf' ? (
-            <div className="w-full h-full min-h-[500px] bg-stone-900 rounded-xl overflow-hidden border border-stone-700 flex items-center justify-center">
-              {activePdfUrl ? (
-                <iframe
-                  src={activePdfUrl}
-                  title="Visualizador de PDF - Cartilha 40 Anos"
-                  className="w-full h-full border-none"
-                />
-              ) : (
-                <div className="text-center p-8">
-                  <FileText className="w-12 h-12 text-amber-400 mx-auto mb-2 animate-pulse" />
-                  <p>Carregando arquivo PDF...</p>
-                </div>
-              )}
-            </div>
-          ) : (
+          {
             /* VISUAL HIGH FIDELITY RENDERER FOR 6 PAGES */
             <div className="w-full max-w-2xl bg-white text-[#2d2926] shadow-2xl rounded-2xl overflow-hidden border border-stone-300 flex flex-col min-h-[580px] sm:min-h-[660px] relative transition-all animate-fadeIn">
               
@@ -746,36 +595,9 @@ export const PdfViewerModal: React.FC<PdfViewerModalProps> = ({
                 </div>
               )}
             </div>
-          )}
+          }
         </div>
 
-        {/* Modal Bottom Bar */}
-        <div className="px-4 sm:px-6 py-3 bg-[#132238] border-t border-stone-800 flex flex-wrap items-center justify-between gap-3 text-xs text-stone-300 shrink-0">
-          <div className="flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-emerald-400" />
-            <span className="text-[11px] sm:text-xs">
-              Projeto aprovado no Ministério da Cultura • PRONAC 264180 • Artigo 18 (100% de abatimento)
-            </span>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={handleDownload}
-              className="text-amber-300 hover:text-amber-200 font-bold flex items-center gap-1 transition-colors"
-            >
-              <Download className="w-3.5 h-3.5" /> Baixar PDF Completo
-            </button>
-            <span>•</span>
-            <button
-              type="button"
-              onClick={handleOpenNewTab}
-              className="text-stone-300 hover:text-white font-medium flex items-center gap-1 transition-colors"
-            >
-              <ExternalLink className="w-3.5 h-3.5" /> Abrir em Tela Cheia
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   );

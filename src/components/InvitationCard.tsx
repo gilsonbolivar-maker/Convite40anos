@@ -3,7 +3,7 @@ import { InvitationData } from '../types';
 import { SPONSOR_TIERS, COLOR_PALETTES, isThemeLight } from '../data/defaultData';
 import { OfficialEmblem } from './OfficialEmblem';
 import { FestiveArtworkCanvas } from './FestiveArtworkCanvas';
-import { Sparkles, Phone, Award, FileText } from 'lucide-react';
+import { Sparkles, Award, FileText } from 'lucide-react';
 
 interface InvitationCardProps {
   data: InvitationData;
@@ -45,7 +45,7 @@ export const InvitationCard: React.FC<InvitationCardProps> = ({
       id="invitation-card-capture"
       className={`relative overflow-hidden ${
         isLight ? 'text-[#2d2926]' : 'text-stone-100'
-      } flex flex-col justify-between p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl shadow-2xl transition-all duration-300 select-none ${getFormatClasses()} ${className}`}
+      } flex flex-col justify-between p-4 sm:p-5 md:p-5 rounded-2xl sm:rounded-3xl shadow-2xl transition-all duration-300 select-none ${getFormatClasses()} ${className}`}
       style={{
         transform: previewScale !== 1 ? `scale(${previewScale})` : undefined,
         transformOrigin: 'top center'
@@ -151,7 +151,7 @@ export const InvitationCard: React.FC<InvitationCardProps> = ({
       <div className="relative z-20 my-auto py-2 sm:py-3 flex flex-col items-center text-center">
         {/* Official 40 Anos Emblem */}
         {data.showOfficialEmblem && (
-          <div className="mb-2 sm:mb-3 transform hover:scale-[1.02] transition-transform duration-300 max-w-full">
+          <div className="mb-1.5 sm:mb-2 transform hover:scale-[1.02] transition-transform duration-300 max-w-full">
             <OfficialEmblem
               variant={data.format === 'story' ? 'full' : 'full'}
               isLight={isLight}
@@ -179,7 +179,7 @@ export const InvitationCard: React.FC<InvitationCardProps> = ({
 
         {/* 2nd Key Phrase: "Sua marca atrelada a 40 anos de tradição." */}
         <p
-          className={`mt-2 sm:mt-3 font-montserrat text-xs sm:text-sm md:text-base font-semibold tracking-wide max-w-md px-2 ${
+          className={`mt-1.5 sm:mt-2 font-montserrat text-xs sm:text-sm md:text-base font-semibold tracking-wide max-w-md px-2 ${
             isLight ? `${palette.subHeadlineColor}` : 'text-amber-100/95 drop-shadow'
           }`}
         >
@@ -206,7 +206,7 @@ export const InvitationCard: React.FC<InvitationCardProps> = ({
         {/* Short Paragraph Inviting Businessman to Celebrate Milestone */}
         {data.invitationParagraph && (
           <p
-            className={`mt-2 sm:mt-2.5 max-w-md font-montserrat text-[10px] sm:text-xs leading-relaxed font-normal px-2 ${
+            className={`mt-1.5 sm:mt-2 max-w-md font-montserrat text-[10px] sm:text-xs leading-snug font-normal px-2 ${
               isLight ? 'text-[#4a4540]' : 'text-amber-100/90 drop-shadow'
             }`}
           >
@@ -217,7 +217,7 @@ export const InvitationCard: React.FC<InvitationCardProps> = ({
         {/* Custom Sponsor Logo Slot: only rendered once a sponsor logo exists,
             so the card stays clean while no brand is attached. */}
         {data.showSponsorSlot && data.customLogoUrl && (
-          <div className="mt-2.5 sm:mt-3 flex items-center justify-center gap-3">
+          <div className="mt-2 flex items-center justify-center gap-3">
             <div
               className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg backdrop-blur-md flex items-center gap-2 ${
                 isLight
@@ -243,7 +243,7 @@ export const InvitationCard: React.FC<InvitationCardProps> = ({
         )}
         {/* Interactive PDF Attachment Button (Clickable when shared / previewed) */}
         {data.showPdfButton && (
-          <div className="mt-2.5 sm:mt-3 flex items-center justify-center">
+          <div className="mt-2 flex items-center justify-center">
             <button
               type="button"
               onClick={(e) => {
@@ -283,19 +283,6 @@ export const InvitationCard: React.FC<InvitationCardProps> = ({
           <span className="truncate">{data.edition}</span>
         </div>
 
-        {/* Organizer WhatsApp / Contact Info */}
-        {data.showContactBar && (
-          <div
-            className={`flex items-center gap-1.5 font-montserrat font-medium px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md border shrink-0 ${
-              isLight
-                ? 'bg-amber-600/15 border-amber-600/40 text-amber-950'
-                : 'bg-amber-500/20 border-amber-400/30 text-white'
-            }`}
-          >
-            <Phone className={`w-2.5 sm:w-3 h-2.5 sm:h-3 ${isLight ? 'text-amber-700' : 'text-amber-400'}`} />
-            <span className="text-[10px] sm:text-xs">{data.organizerPhone}</span>
-          </div>
-        )}
       </div>
     </div>
   );
