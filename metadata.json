@@ -1,0 +1,6 @@
+{
+  "name": "Convite 40 Anos Lavagem da Esquina do Padre",
+  "description": "Gerador e cartão de convite oficial para empresários e patrocinadores dos 40 Anos da Lavagem da Esquina do Padre em Caetité - Bahia.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
