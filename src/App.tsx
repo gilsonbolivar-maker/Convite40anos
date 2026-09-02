@@ -8,6 +8,7 @@ import { ProposalModal } from './components/ProposalModal';
 import { MetricsModal } from './components/MetricsModal';
 import { PdfViewerModal } from './components/PdfViewerModal';
 import { generateOfficialProposalPdf } from './utils/generatePdfProposal';
+import { buildInvitationLink, readInvitationFromUrl } from './utils/shareLink';
 import { toPng } from 'html-to-image';
 import confetti from 'canvas-confetti';
 import {
@@ -17,7 +18,7 @@ import {
   Minimize2,
   Sparkles,
   Phone,
-  Copy,
+  Link as LinkIcon,
   Check,
   Building2,
   Eye,
@@ -28,13 +29,21 @@ import {
 } from 'lucide-react';
 
 export default function App() {
-  const [data, setData] = useState<InvitationData>(DEFAULT_INVITATION_DATA);
+  // An invitation carried in the URL opens as a finished card: the recipient of
+  // a shared link sees the convite alone, without the editing workspace.
+  const [sharedInvitation] = useState(() => readInvitationFromUrl());
+  const isSharedView = sharedInvitation !== null;
+
+  const [data, setData] = useState<InvitationData>(() => ({
+    ...DEFAULT_INVITATION_DATA,
+    ...(sharedInvitation ?? {}),
+  }));
   const [isExporting, setIsExporting] = useState(false);
   const [isProposalOpen, setIsProposalOpen] = useState(false);
   const [isMetricsOpen, setIsMetricsOpen] = useState(false);
   const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [copiedQuick, setCopiedQuick] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
   const [mobileTab, setMobileTab] = useState<'preview' | 'editor'>('preview');
   const [calculatedScale, setCalculatedScale] = useState<number>(1);
@@ -197,22 +206,52 @@ export default function App() {
     }
   };
 
-  const handleCopyShortText = async () => {
-    const text =
-      `🏛️ CONVITE: 40 ANOS DA LAVAGEM DA ESQUINA DO PADRE (Caetité - BA)\n\n` +
-      `"${data.mainHeadline}"\n` +
-      `"${data.subHeadline}"\n` +
-      `"${data.emotionalHook}"\n\n` +
-      `${data.invitationParagraph ? `${data.invitationParagraph}\n\n` : ''}` +
-      (data.pdfLinkUrl ? `Mídia Kit PDF: ${data.pdfLinkUrl}\n\n` : '') +
-      `Destinado a: ${data.recipientCompany}\n` +
-      `Contato Comissão: ${data.organizerPhone} (${data.organizerContactName})`;
-    await navigator.clipboard.writeText(text);
-    setCopiedQuick(true);
-    setTimeout(() => setCopiedQuick(false), 2000);
+  const handleCopyLink = async () => {
+    await navigator.clipboard.writeText(buildInvitationLink(data));
+    setCopiedLink(true);
+    setTimeout(() => setCopiedLink(false), 2000);
   };
 
   const currentTier = SPONSOR_TIERS.find(t => t.id === data.selectedTier) || SPONSOR_TIERS[1];
+
+  // Shared link: the invitation alone, with the media kit one tap away.
+  if (isSharedView) {
+    return (
+      <div className="min-h-screen bg-[#faf8f4] text-[#2d2926] font-jakarta flex flex-col items-center justify-center gap-6 px-4 py-8">
+        <div ref={previewContainerRef} className="w-full flex justify-center">
+          <div
+            style={{
+              transform: calculatedScale !== 1 ? `scale(${calculatedScale})` : undefined,
+              transformOrigin: 'top center',
+              marginBottom: calculatedScale < 1 ? `-${Math.round((1 - calculatedScale) * 360)}px` : undefined,
+            }}
+          >
+            <InvitationCard
+              data={data}
+              cardRef={cardRef}
+              onOpenPdf={() => setIsPdfModalOpen(true)}
+            />
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setIsPdfModalOpen(true)}
+          className="py-3 px-6 rounded-xl bg-gradient-to-r from-[#c5a059] via-[#d4af37] to-[#b88e28] text-white font-bold text-sm flex items-center gap-2 shadow-md transition-all active:scale-95"
+        >
+          <FileText className="w-4 h-4" />
+          Ver Cartilha / Proposta em PDF
+        </button>
+
+        <PdfViewerModal
+          isOpen={isPdfModalOpen}
+          onClose={() => setIsPdfModalOpen(false)}
+          data={data}
+          onCaptureArtwork={captureCardPng}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#faf8f4] text-[#2d2926] flex flex-col font-jakarta selection:bg-[#c5a059]/20 selection:text-[#8c6e30]">
@@ -397,19 +436,19 @@ export default function App() {
 
               <button
                 type="button"
-                onClick={handleCopyShortText}
+                onClick={handleCopyLink}
                 className="w-full py-3 px-3 rounded-xl bg-[#f4efe6] hover:bg-[#eae3d5] text-[#2d2926] border border-[#ded7c8] text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors active:scale-95 min-h-[44px]"
-                title="Copiar texto do convite"
+                title="Copiar um link que abre este convite"
               >
-                {copiedQuick ? (
+                {copiedLink ? (
                   <>
                     <Check className="w-4 h-4 text-emerald-600 shrink-0" />
-                    <span className="text-emerald-700 truncate font-bold">Copiado!</span>
+                    <span className="text-emerald-700 truncate font-bold">Link copiado!</span>
                   </>
                 ) : (
                   <>
-                    <Copy className="w-4 h-4 text-[#8c6e30] shrink-0" />
-                    <span className="truncate">Copiar Frase</span>
+                    <LinkIcon className="w-4 h-4 text-[#8c6e30] shrink-0" />
+                    <span className="truncate">Copiar Link</span>
                   </>
                 )}
               </button>
