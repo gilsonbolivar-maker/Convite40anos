@@ -6,7 +6,16 @@ import { InvitationData } from '../types';
  * "DIRECIONAMENTO DO IMPOSTO DE RENDA - 40 ANOS DA LAVAGEM DA ESQUINA DO PADRE"
  * PRONAC 264180 | Artigo 18 | Esquina do Padre Produções Artísticas
  */
-export const generateOfficialProposalPdf = (data: InvitationData): { blob: Blob; url: string; fileName: string } => {
+/**
+ * When `artworkDataUrl` is provided (a PNG of the invitation card), it is placed
+ * as a full-page cover before the Cartilha, so a single file carries both the
+ * artwork and the commercial media kit — WhatsApp and e-mail render that first
+ * page as the preview thumbnail.
+ */
+export const generateOfficialProposalPdf = (
+  data: InvitationData,
+  artworkDataUrl?: string | null
+): { blob: Blob; url: string; fileName: string } => {
   const doc = new jsPDF({
     orientation: 'portrait',
     unit: 'mm',
@@ -47,6 +56,57 @@ export const generateOfficialProposalPdf = (data: InvitationData): { blob: Blob;
     doc.setTextColor(darkNavy[0], darkNavy[1], darkNavy[2]);
     doc.text(title.toUpperCase(), margin, 34);
   };
+
+  // ==========================================
+  // ARTWORK COVER (optional, rendered before the Cartilha)
+  // ==========================================
+  if (artworkDataUrl) {
+    doc.setFillColor(darkNavy[0], darkNavy[1], darkNavy[2]);
+    doc.rect(0, 0, pw, ph, 'F');
+
+    // Gold hairline frame
+    doc.setDrawColor(gold[0], gold[1], gold[2]);
+    doc.setLineWidth(0.4);
+    doc.rect(8, 8, pw - 16, ph - 16);
+
+    const captionBand = 20;
+    const artMaxW = pw - 32;
+    const artMaxH = ph - 32 - captionBand;
+
+    const props = doc.getImageProperties(artworkDataUrl);
+    const fit = Math.min(artMaxW / props.width, artMaxH / props.height);
+    const iw = props.width * fit;
+    const ih = props.height * fit;
+    const ix = (pw - iw) / 2;
+    const iy = 16 + (artMaxH - ih) / 2;
+
+    // White mat behind the artwork so any transparency stays legible
+    doc.setFillColor(255, 255, 255);
+    doc.roundedRect(ix - 2.5, iy - 2.5, iw + 5, ih + 5, 2, 2, 'F');
+    doc.addImage(artworkDataUrl, 'PNG', ix, iy, iw, ih, undefined, 'FAST');
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8.5);
+    doc.setTextColor(gold[0], gold[1], gold[2]);
+    doc.text(
+      'CONVITE OFICIAL  |  40 ANOS DA LAVAGEM DA ESQUINA DO PADRE',
+      pw / 2,
+      ph - 20,
+      { align: 'center' }
+    );
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7.5);
+    doc.setTextColor(190, 200, 215);
+    doc.text(
+      'Caetite - Bahia    |    PRONAC 264180    |    Cartilha completa nas paginas seguintes',
+      pw / 2,
+      ph - 14,
+      { align: 'center' }
+    );
+
+    doc.addPage();
+  }
 
   // ==========================================
   // PAGE 1: CAPA
@@ -590,7 +650,9 @@ export const generateOfficialProposalPdf = (data: InvitationData): { blob: Blob;
 
   // Output
   const cleanCompanyName = (data.recipientCompany || 'Empresa').replace(/[^a-zA-Z0-9]/g, '_');
-  const fileName = `Cartilha_IRPJ_40_Anos_Lavagem_PRONAC_${cleanCompanyName}.pdf`;
+  const fileName = artworkDataUrl
+    ? `Convite_e_Cartilha_40_Anos_Lavagem_${cleanCompanyName}.pdf`
+    : `Cartilha_IRPJ_40_Anos_Lavagem_PRONAC_${cleanCompanyName}.pdf`;
 
   const blob = doc.output('blob');
   const url = URL.createObjectURL(blob);

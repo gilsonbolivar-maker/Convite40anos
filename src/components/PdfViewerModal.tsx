@@ -23,43 +23,70 @@ interface PdfViewerModalProps {
   onClose: () => void;
   data: InvitationData;
   onPdfUpdate?: (data: Partial<InvitationData>) => void;
+  /** Captures the live invitation card as a PNG data URL for the PDF cover page. */
+  onCaptureArtwork?: () => Promise<string | null>;
 }
 
 export const PdfViewerModal: React.FC<PdfViewerModalProps> = ({
   isOpen,
   onClose,
-  data
+  data,
+  onCaptureArtwork
 }) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [viewMode, setViewMode] = useState<'visual' | 'rawPdf'>('visual');
   const [activePdfUrl, setActivePdfUrl] = useState<string | null>(null);
   const [activeFileName, setActiveFileName] = useState<string>('Cartilha_IRPJ_40_Anos_Lavagem_PRONAC.pdf');
   const [copiedLink, setCopiedLink] = useState(false);
+  const [artworkDataUrl, setArtworkDataUrl] = useState<string | null>(null);
+  const [isPreparing, setIsPreparing] = useState(false);
 
-  // Initialize or regenerate PDF
+  // Initialize or regenerate PDF. The generated Cartilha carries the invitation
+  // artwork as its cover page, so a single file can be shared on WhatsApp or e-mail.
   useEffect(() => {
     if (!isOpen) return;
 
     if (data.pdfAttachmentUrl) {
       setActivePdfUrl(data.pdfAttachmentUrl);
       setActiveFileName(data.pdfFileName || 'Cartilha_IRPJ_40_Anos_Lavagem.pdf');
-    } else if (data.pdfLinkUrl) {
+      return;
+    }
+
+    if (data.pdfLinkUrl) {
       setActivePdfUrl(data.pdfLinkUrl);
       setActiveFileName('Cartilha_IRPJ_Externa.pdf');
-    } else {
-      const { url, fileName } = generateOfficialProposalPdf(data);
+      return;
+    }
+
+    let cancelled = false;
+
+    const prepare = async () => {
+      setIsPreparing(true);
+      const artwork = onCaptureArtwork ? await onCaptureArtwork() : null;
+      if (cancelled) return;
+
+      setArtworkDataUrl(artwork);
+      const { url, fileName } = generateOfficialProposalPdf(data, artwork);
       setActivePdfUrl(url);
       setActiveFileName(fileName);
-    }
+      setIsPreparing(false);
+    };
+
+    prepare();
+
+    return () => {
+      cancelled = true;
+    };
   }, [isOpen, data.pdfAttachmentUrl, data.pdfLinkUrl, data.recipientCompany]);
 
-  const handleDownload = () => {
-    // Always download freshly generated official 6-page Cartilha PDF or attached PDF
+  const handleDownload = async () => {
+    // Always download a freshly generated Cartilha (artwork cover + 6 pages) or the attached PDF
     let downloadUrl = activePdfUrl;
     let fileName = activeFileName;
 
     if (!data.pdfAttachmentUrl && !data.pdfLinkUrl) {
-      const { url, fileName: genFileName } = generateOfficialProposalPdf(data);
+      const artwork = artworkDataUrl ?? (onCaptureArtwork ? await onCaptureArtwork() : null);
+      const { url, fileName: genFileName } = generateOfficialProposalPdf(data, artwork);
       downloadUrl = url;
       fileName = genFileName;
     }
@@ -78,7 +105,7 @@ export const PdfViewerModal: React.FC<PdfViewerModalProps> = ({
     if (activePdfUrl) {
       window.open(activePdfUrl, '_blank', 'noopener,noreferrer');
     } else {
-      const { url } = generateOfficialProposalPdf(data);
+      const { url } = generateOfficialProposalPdf(data, artworkDataUrl);
       window.open(url, '_blank', 'noopener,noreferrer');
     }
   };
@@ -93,6 +120,9 @@ export const PdfViewerModal: React.FC<PdfViewerModalProps> = ({
       setTimeout(() => setCopiedLink(false), 2200);
     }
   };
+
+  // The artwork cover sits before the Cartilha, so it is page 0 when available.
+  const firstPage = artworkDataUrl ? 0 : 1;
 
   if (!isOpen) return null;
 
@@ -161,11 +191,18 @@ export const PdfViewerModal: React.FC<PdfViewerModalProps> = ({
 
             <button
               onClick={handleDownload}
-              title="Baixar Cartilha em PDF"
-              className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-stone-950 font-bold transition-all flex items-center gap-1.5 text-xs shadow-md"
+              disabled={isPreparing}
+              title="Baixar o convite e a Cartilha em um unico PDF"
+              className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 disabled:opacity-60 disabled:cursor-wait text-stone-950 font-bold transition-all flex items-center gap-1.5 text-xs shadow-md"
             >
               <Download className="w-4 h-4" />
-              <span className="hidden sm:inline">Baixar PDF (6 Págs)</span>
+              <span className="hidden sm:inline">
+                {isPreparing
+                  ? 'Montando PDF...'
+                  : artworkDataUrl
+                    ? 'Baixar PDF (Arte + 6 Págs)'
+                    : 'Baixar PDF (6 Págs)'}
+              </span>
             </button>
 
             <button
@@ -186,6 +223,7 @@ export const PdfViewerModal: React.FC<PdfViewerModalProps> = ({
               PÁGINAS:
             </span>
             {[
+              ...(artworkDataUrl ? [{ num: 0, label: '00 • Arte' }] : []),
               { num: 1, label: '01 • Capa' },
               { num: 2, label: '02 • A Lei' },
               { num: 3, label: '03 • Cenários' },
@@ -225,8 +263,8 @@ export const PdfViewerModal: React.FC<PdfViewerModalProps> = ({
           <div className="flex items-center gap-2">
             <button
               type="button"
-              disabled={currentPage <= 1}
-              onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+              disabled={currentPage <= firstPage}
+              onClick={() => setCurrentPage((prev) => Math.max(firstPage, prev - 1))}
               className="px-3 py-1.5 sm:py-2 rounded-xl bg-stone-800 hover:bg-stone-700 disabled:opacity-30 disabled:cursor-not-allowed text-stone-100 font-bold flex items-center gap-1 text-xs sm:text-sm transition-all border border-stone-700 active:scale-95"
             >
               <ChevronLeft className="w-4 h-4 text-amber-400" />
@@ -273,6 +311,24 @@ export const PdfViewerModal: React.FC<PdfViewerModalProps> = ({
             /* VISUAL HIGH FIDELITY RENDERER FOR 6 PAGES */
             <div className="w-full max-w-2xl bg-white text-[#2d2926] shadow-2xl rounded-2xl overflow-hidden border border-stone-300 flex flex-col min-h-[580px] sm:min-h-[660px] relative transition-all animate-fadeIn">
               
+              {/* PAGE 0: ARTE DO CONVITE (capa do arquivo compartilhado) */}
+              {currentPage === 0 && artworkDataUrl && (
+                <div className="flex-1 bg-[#132238] p-5 sm:p-8 flex flex-col items-center justify-center gap-4">
+                  <img
+                    src={artworkDataUrl}
+                    alt="Arte do convite oficial"
+                    className="max-h-[460px] w-auto max-w-full rounded-lg shadow-2xl bg-white"
+                  />
+                  <p className="font-montserrat text-[11px] sm:text-xs text-center text-[#d9a036] font-bold uppercase tracking-[0.18em]">
+                    Convite oficial • 40 anos da Lavagem da Esquina do Padre
+                  </p>
+                  <p className="font-montserrat text-[10px] sm:text-[11px] text-center text-stone-300 max-w-md leading-relaxed">
+                    Esta arte é a primeira página do PDF — é ela que aparece como miniatura
+                    ao enviar o arquivo pelo WhatsApp ou por e-mail.
+                  </p>
+                </div>
+              )}
+
               {/* PAGE 1: CAPA */}
               {currentPage === 1 && (
                 <div className="flex-1 bg-[#132238] text-white p-6 sm:p-10 flex flex-col justify-between relative overflow-hidden">

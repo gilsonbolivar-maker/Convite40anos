@@ -94,18 +94,30 @@ export default function App() {
     };
   }, [data.format]);
 
+  // Capture the live card as a crisp PNG data URL. Shared by the PNG download
+  // and by the PDF, which uses the same artwork as its cover page.
+  const captureCardPng = useCallback(async (): Promise<string | null> => {
+    if (!cardRef.current) return null;
+    try {
+      return await toPng(cardRef.current, {
+        quality: 0.98,
+        pixelRatio: 2.5,
+        cacheBust: true,
+      });
+    } catch (err) {
+      console.error('Error capturing card image:', err);
+      return null;
+    }
+  }, []);
+
   // Export card to PNG using html-to-image
   const handleExportPng = async () => {
     if (!cardRef.current) return;
     try {
       setIsExporting(true);
-      
-      // Generate crisp image with high pixel ratio
-      const dataUrl = await toPng(cardRef.current, {
-        quality: 0.98,
-        pixelRatio: 2.5,
-        cacheBust: true,
-      });
+
+      const dataUrl = await captureCardPng();
+      if (!dataUrl) return;
 
       const cleanFileName = `Convite_40_Anos_Lavagem_Esquina_do_Padre_${
         data.recipientCompany.replace(/[^a-zA-Z0-9]/g, '_') || 'Empresas'
@@ -122,8 +134,6 @@ export default function App() {
         spread: 80,
         origin: { y: 0.6 }
       });
-    } catch (err) {
-      console.error('Error exporting image:', err);
     } finally {
       setIsExporting(false);
     }
@@ -440,6 +450,7 @@ export default function App() {
         onClose={() => setIsPdfModalOpen(false)}
         data={data}
         onPdfUpdate={handleDataChange}
+        onCaptureArtwork={captureCardPng}
       />
 
       {/* FULLSCREEN PREVIEW MODAL */}
