@@ -237,6 +237,22 @@ export const CardEditor: React.FC<CardEditorProps> = ({ data, onChange, onReset,
           <ImageIcon className="w-4 h-4" /> Imagem de Fundo & Logo da Marca
         </label>
 
+        {/* Transparent Background Toggle */}
+        <label className="flex items-center gap-2 p-3 rounded-xl bg-[#f4efe6]/60 border border-[#e8e2d5] cursor-pointer">
+          <input
+            type="checkbox"
+            checked={data.transparentBackground}
+            onChange={(e) => onChange({ transparentBackground: e.target.checked })}
+            className="w-4 h-4 accent-[#c5a059] rounded cursor-pointer"
+          />
+          <span className="flex flex-col">
+            <span className="text-xs font-semibold text-[#2d2926]">Fundo transparente</span>
+            <span className="text-[11px] text-[#78716c]">
+              Remove a arte de fundo; a imagem baixada fica sem fundo, para usar sobre outra arte.
+            </span>
+          </span>
+        </label>
+
         {/* Upload Custom Background */}
         <div className="p-3 rounded-xl bg-[#f4efe6]/60 border border-[#e8e2d5] flex flex-col gap-2.5">
           <div className="flex items-center justify-between">
