@@ -67,10 +67,12 @@ export const OfficialEmblem: React.FC<OfficialEmblemProps> = ({
 
         {/* Script Title */}
         <div className="flex flex-col items-center">
-          <span className="font-playfair italic text-amber-200 text-base sm:text-lg md:text-xl font-bold tracking-wide drop-shadow-md">
+          {/* Kept on one line: if "da" wraps, it lands on top of the title below,
+              which happens once a fallback font renders the line wider. */}
+          <span className="font-playfair italic text-amber-200 text-base sm:text-lg md:text-xl font-bold tracking-wide drop-shadow-md whitespace-nowrap leading-normal">
             Lavagem <span className="font-sans text-[10px] sm:text-xs font-normal text-amber-300/80 not-italic tracking-widest uppercase">da</span>
           </span>
-          <h2 className="font-cinzel text-lg sm:text-2xl md:text-3xl font-black tracking-wider text-gold-bright drop-shadow-lg leading-tight uppercase truncate max-w-[260px] sm:max-w-none">
+          <h2 className="font-cinzel text-lg sm:text-2xl md:text-3xl font-black tracking-wider text-gold-bright drop-shadow-lg leading-normal uppercase truncate max-w-[260px] sm:max-w-none">
             Esquina do Padre
           </h2>
         </div>
