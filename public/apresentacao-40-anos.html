@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <meta name="theme-color" content="#4a1420">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="Proposta oficial de patrocínio dos 40 Anos da Lavagem da Esquina do Padre — Caetité, Bahia. PRONAC 264180, Artigo 18, custo zero.">
+  <title>40 Anos Lavagem da Esquina do Padre • Apresentação Interativa Offline</title>
+  <style>
+    :root {
+      --gold-primary: #a8760a;
+      --gold-bright: #d4af37;
+      --gold-light: #f0d98a;
+      --gold-soft: #fdf6e3;
+      --wine-dark: #4a1420;
+      --wine-mid: #6b2030;
+      --navy-dark: #0f172a;
+      --bg-cream: #faf6ee;
+      --card-bg: #ffffff;
+      --text-dark: #1e1b18;
+      --text-muted: #57534e;
+      --border-color: #ddcdb2;
+      --border-soft: #ece2d0;
+      --green-deep: #065f46;
+      --shadow-sm: 0 2px 8px rgba(74, 20, 32, 0.06);
+      --shadow-md: 0 6px 20px rgba(74, 20, 32, 0.09);
+      --shadow-lg: 0 14px 44px rgba(74, 20, 32, 0.13);
+      --font-display: Georgia, "Times New Roman", "Playfair Display", serif;
+      --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { -webkit-text-size-adjust: 100%; }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg-cream);
+      background-image:
+        radial-gradient(circle at 12% 0%, rgba(212, 175, 55, 0.16), transparent 42%),
+        radial-gradient(circle at 88% 100%, rgba(74, 20, 32, 0.10), transparent 45%);
+      background-attachment: fixed;
+      color: var(--text-dark);
+      min-height: 100vh;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 14px 12px calc(14px + env(safe-area-inset-bottom));
+      line-height: 1.55;
+    }
+
+    /* Acessibilidade: radios ficam focáveis por teclado, mas invisíveis */
+    input[type="radio"].frame-toggle {
+      position: absolute;
+      width: 1px; height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* ============ CABEÇALHO ============ */
+    .top-header {
+      width: 100%;
+      max-width: 880px;
+      background: linear-gradient(135deg, #ffffff 0%, #fffdf8 100%);
+      border: 1px solid var(--border-color);
+      border-top: 4px solid var(--gold-primary);
+      border-radius: 18px;
+      padding: 12px 18px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .header-info { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+    .header-info h1 {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--wine-dark);
+      letter-spacing: 0.2px;
+    }
+
+    .status-badge {
+      background: #15803d;
+      color: #ffffff;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 3px 9px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      white-space: nowrap;
+    }
+
+    .header-actions { display: flex; align-items: center; gap: 8px; }
+
+    .btn-header {
+      padding: 8px 14px;
+      border-radius: 10px;
+      background: var(--navy-dark);
+      color: #ffffff;
+      border: none;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+    .btn-header.secondary { background: #ffffff; color: var(--wine-dark); border: 1.5px solid var(--border-color); }
+    .btn-header:hover { transform: translateY(-1px); background: var(--wine-mid); color: #fff; }
+
+    /* ============ CONTAINER ============ */
+    .presentation-container {
+      width: 100%;
+      max-width: 880px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* ============ ABAS ============ */
+    .quadros-selector {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 8px 10px;
+      overflow-x: auto;
+      scrollbar-width: thin;
+      -webkit-overflow-scrolling: touch;
+    }
+    .quadros-selector::-webkit-scrollbar { height: 4px; }
+    .quadros-selector::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+
+    .tab-label {
+      padding: 7px 13px;
+      border-radius: 10px;
+      background: #f7f2e8;
+      border: 1px solid var(--border-soft);
+      font-size: 12px;
+      font-weight: 800;
+      color: #44403c;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      user-select: none;
+      flex: 0 0 auto;
+    }
+    .tab-label .tab-num { color: var(--gold-primary); margin-right: 3px; }
+    .tab-label:hover { background: #eee0c8; border-color: var(--gold-light); }
+
+    #tab-1:checked ~ .presentation-container .tab-lbl-1,
+    #tab-2:checked ~ .presentation-container .tab-lbl-2,
+    #tab-3:checked ~ .presentation-container .tab-lbl-3,
+    #tab-4:checked ~ .presentation-container .tab-lbl-4,
+    #tab-5:checked ~ .presentation-container .tab-lbl-5,
+    #tab-6:checked ~ .presentation-container .tab-lbl-6,
+    #tab-7:checked ~ .presentation-container .tab-lbl-7,
+    #tab-8:checked ~ .presentation-container .tab-lbl-8 {
+      background: linear-gradient(135deg, var(--wine-dark), var(--wine-mid));
+      border-color: var(--wine-dark);
+      color: #ffffff;
+      box-shadow: var(--shadow-sm);
+    }
+    #tab-1:checked ~ .presentation-container .tab-lbl-1 .tab-num,
+    #tab-2:checked ~ .presentation-container .tab-lbl-2 .tab-num,
+    #tab-3:checked ~ .presentation-container .tab-lbl-3 .tab-num,
+    #tab-4:checked ~ .presentation-container .tab-lbl-4 .tab-num,
+    #tab-5:checked ~ .presentation-container .tab-lbl-5 .tab-num,
+    #tab-6:checked ~ .presentation-container .tab-lbl-6 .tab-num,
+    #tab-7:checked ~ .presentation-container .tab-lbl-7 .tab-num,
+    #tab-8:checked ~ .presentation-container .tab-lbl-8 .tab-num { color: var(--gold-light); }
+
+    /* Foco visível pelo teclado */
+    #tab-1:focus-visible ~ .presentation-container .tab-lbl-1,
+    #tab-2:focus-visible ~ .presentation-container .tab-lbl-2,
+    #tab-3:focus-visible ~ .presentation-container .tab-lbl-3,
+    #tab-4:focus-visible ~ .presentation-container .tab-lbl-4,
+    #tab-5:focus-visible ~ .presentation-container .tab-lbl-5,
+    #tab-6:focus-visible ~ .presentation-container .tab-lbl-6,
+    #tab-7:focus-visible ~ .presentation-container .tab-lbl-7,
+    #tab-8:focus-visible ~ .presentation-container .tab-lbl-8 {
+      outline: 3px solid var(--gold-bright);
+      outline-offset: 2px;
+    }
+
+    /* ============ BARRA DE PROGRESSO ============ */
+    .progress-track {
+      height: 6px;
+      width: 100%;
+      background: #ece2d0;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 12.5%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, var(--gold-primary), var(--gold-bright));
+      transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    #tab-1:checked ~ .presentation-container .progress-fill { width: 12.5%; }
+    #tab-2:checked ~ .presentation-container .progress-fill { width: 25%; }
+    #tab-3:checked ~ .presentation-container .progress-fill { width: 37.5%; }
+    #tab-4:checked ~ .presentation-container .progress-fill { width: 50%; }
+    #tab-5:checked ~ .presentation-container .progress-fill { width: 62.5%; }
+    #tab-6:checked ~ .presentation-container .progress-fill { width: 75%; }
+    #tab-7:checked ~ .presentation-container .progress-fill { width: 87.5%; }
+    #tab-8:checked ~ .presentation-container .progress-fill { width: 100%; }
+
+    /* ============ QUADROS ============ */
+    .frame-panel {
+      display: none;
+      width: 100%;
+      min-height: 520px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-top: 5px solid var(--gold-primary);
+      border-radius: 20px;
+      padding: 30px 26px 22px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    /* Ornamento de canto */
+    .frame-panel::before {
+      content: "";
+      position: absolute;
+      top: -70px; right: -70px;
+      width: 190px; height: 190px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(212,175,55,0.18), transparent 70%);
+      pointer-events: none;
+    }
+
+    #tab-1:checked ~ .presentation-container #panel-1,
+    #tab-2:checked ~ .presentation-container #panel-2,
+    #tab-3:checked ~ .presentation-container #panel-3,
+    #tab-4:checked ~ .presentation-container #panel-4,
+    #tab-5:checked ~ .presentation-container #panel-5,
+    #tab-6:checked ~ .presentation-container #panel-6,
+    #tab-7:checked ~ .presentation-container #panel-7,
+    #tab-8:checked ~ .presentation-container #panel-8 {
+      display: flex;
+      animation: fadeIn 0.28s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+
+    /* ============ COMPONENTES DO QUADRO ============ */
+    .card-header-badge {
+      align-self: center;
+      background: linear-gradient(135deg, #fef3c7, var(--gold-soft));
+      border: 1px solid var(--gold-light);
+      color: #7c4a03;
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 5px 15px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 1.1px;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .card-main-title {
+      font-family: var(--font-display);
+      font-size: 27px;
+      font-weight: 700;
+      color: var(--wine-dark);
+      text-align: center;
+      line-height: 1.22;
+      margin-bottom: 8px;
+    }
+
+    .card-sub-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--gold-primary);
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 1.4px;
+      margin-bottom: 6px;
+    }
+
+    /* Filete decorativo sob o subtítulo */
+    .rule-ornament {
+      width: 96px;
+      height: 2px;
+      margin: 0 auto 18px;
+      background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
+      position: relative;
+    }
+    .rule-ornament::after {
+      content: "◆";
+      position: absolute;
+      top: -9px; left: 50%;
+      transform: translateX(-50%);
+      font-size: 9px;
+      color: var(--gold-primary);
+      background: var(--card-bg);
+      padding: 0 5px;
+    }
+
+    .card-body-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      width: 100%;
+      gap: 12px;
+    }
+
+    .info-box {
+      background: linear-gradient(180deg, #fffdf9, #fdfaf3);
+      border: 1px solid var(--border-soft);
+      border-left: 4px solid var(--gold-primary);
+      border-radius: 14px;
+      padding: 16px 20px;
+      width: 100%;
+      max-width: 640px;
+      text-align: left;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .info-box h3 {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--wine-dark);
+      margin-bottom: 6px;
+    }
+
+    .info-box p {
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: var(--text-dark);
+      margin-bottom: 5px;
+    }
+    .info-box p:last-child { margin-bottom: 0; }
+
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
+      gap: 12px;
+      width: 100%;
+      max-width: 640px;
+    }
+
+    .stat-item {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 16px 12px;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .stat-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+    /* Cotas: grade 2x2 equilibrada */
+    .stat-row--quotas { grid-template-columns: repeat(2, 1fr); }
+
+    .stat-val {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--gold-primary);
+      line-height: 1.1;
+      margin-bottom: 5px;
+    }
+
+    .stat-lbl {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .coin-badge {
+      width: 118px;
+      height: 118px;
+      border-radius: 50%;
+      border: 3px solid var(--gold-bright);
+      margin: 0 auto 6px;
+      box-shadow: 0 8px 22px rgba(168, 118, 10, 0.32), inset 0 0 0 5px rgba(212,175,55,0.22);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 35% 28%, #2c3a52, var(--navy-dark) 70%);
+      color: var(--gold-light);
+      font-family: var(--font-display);
+      font-weight: 700;
+    }
+    .coin-badge .coin-num { font-size: 34px; line-height: 1; }
+    .coin-badge .coin-txt { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; margin-top: 2px; }
+
+    .company-highlight {
+      display: inline-block;
+      padding: 9px 20px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #fef3c7, var(--gold-soft));
+      border: 2px solid var(--gold-primary);
+      font-size: 16px;
+      font-weight: 900;
+      color: #7c4a03;
+    }
+
+    .quote-line {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 17px;
+      color: var(--wine-mid);
+    }
+
+    /* ============ NAVEGAÇÃO INFERIOR ============ */
+    .frame-nav-bar {
+      margin-top: 22px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-soft);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .btn-step {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 16px;
+      border-radius: 13px;
+      font-size: 13.5px;
+      font-weight: 800;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s ease;
+      text-align: center;
+      min-height: 48px;
+    }
+
+    .btn-step-prev {
+      background: #f7f2e8;
+      border: 1.5px solid var(--border-color);
+      color: #44403c;
+    }
+    .btn-step-prev:hover { background: #eee0c8; }
+
+    .btn-step-next {
+      background: linear-gradient(135deg, var(--gold-bright), var(--gold-primary));
+      border: 1.5px solid var(--gold-primary);
+      color: #2b1a00;
+      box-shadow: 0 5px 14px rgba(168, 118, 10, 0.3);
+    }
+    .btn-step-next:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(168, 118, 10, 0.4); }
+
+    .btn-step-restart {
+      background: linear-gradient(135deg, var(--wine-dark), var(--wine-mid));
+      border: 1.5px solid var(--wine-dark);
+      color: #ffffff;
+    }
+
+    .step-counter-tag {
+      padding: 7px 13px;
+      border-radius: 10px;
+      background: var(--gold-soft);
+      border: 1px solid var(--border-color);
+      font-size: 12.5px;
+      font-weight: 900;
+      color: var(--wine-dark);
+      white-space: nowrap;
+    }
+
+    /* ============ RODAPÉ ============ */
+    .bottom-disclaimer {
+      text-align: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: #8a8178;
+      margin-top: 14px;
+      max-width: 880px;
+    }
+    .kbd-hint {
+      display: block;
+      font-weight: 600;
+      font-size: 11px;
+      color: #a29a90;
+      margin-top: 4px;
+    }
+    kbd {
+      font-family: inherit;
+      background: #fff;
+      border: 1px solid var(--border-color);
+      border-bottom-width: 2px;
+      border-radius: 5px;
+      padding: 1px 5px;
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--wine-dark);
+    }
+
+    /* ============ RESPONSIVO ============ */
+    @media (max-width: 640px) {
+      body { padding: 10px 8px calc(10px + env(safe-area-inset-bottom)); }
+      .top-header { padding: 10px 12px; border-radius: 14px; }
+      .header-info h1 { font-size: 13.5px; }
+      .btn-header { padding: 7px 11px; font-size: 11px; }
+      .frame-panel { padding: 22px 16px 18px; min-height: 460px; border-radius: 16px; }
+      .card-main-title { font-size: 21px; }
+      .card-sub-title { font-size: 11px; letter-spacing: 1px; }
+      .info-box { padding: 14px 15px; }
+      .info-box p { font-size: 13.5px; }
+      .stat-row { grid-template-columns: 1fr 1fr; gap: 9px; }
+      .stat-val { font-size: 20px; }
+      .stat-lbl { font-size: 10px; }
+      .coin-badge { width: 96px; height: 96px; }
+      .coin-badge .coin-num { font-size: 28px; }
+      .frame-nav-bar { flex-wrap: wrap; }
+      .step-counter-tag { order: 3; width: 100%; text-align: center; }
+      .btn-step { font-size: 12.5px; padding: 13px 10px; }
+    }
+
+    /* ============ IMPRESSÃO / PDF ============ */
+    @media print {
+      @page { size: A4 landscape; margin: 10mm; }
+      body { background: #fff !important; padding: 0; display: block; }
+      .top-header, .quadros-selector, .frame-nav-bar, .progress-track, .bottom-disclaimer { display: none !important; }
+      .presentation-container { max-width: 100%; gap: 0; }
+      .frame-panel {
+        display: flex !important;
+        break-after: page;
+        page-break-after: always;
+        box-shadow: none;
+        border: 2px solid var(--gold-primary);
+        min-height: 0;
+        margin-bottom: 0;
+        animation: none;
+      }
+      .frame-panel:last-child { break-after: auto; page-break-after: auto; }
+      .stat-item, .info-box { box-shadow: none; }
+    }
+
+    /* Fallback sem CSS moderno */
+    noscript .frame-panel { display: flex !important; margin-bottom: 24px; }
+  </style>
+</head>
+<body>
+
+  <!-- RADIOS QUE CONTROLAM AS ABAS (CSS PURO, FUNCIONA SEM JAVASCRIPT) -->
+  <input type="radio" name="frame-selector" id="tab-1" class="frame-toggle" checked>
+  <input type="radio" name="frame-selector" id="tab-2" class="frame-toggle">
+  <input type="radio" name="frame-selector" id="tab-3" class="frame-toggle">
+  <input type="radio" name="frame-selector" id="tab-4" class="frame-toggle">
+  <input type="radio" name="frame-selector" id="tab-5" class="frame-toggle">
+  <input type="radio" name="frame-selector" id="tab-6" class="frame-toggle">
+  <input type="radio" name="frame-selector" id="tab-7" class="frame-toggle">
+  <input type="radio" name="frame-selector" id="tab-8" class="frame-toggle">
+
+  <!-- CABEÇALHO -->
+  <header class="top-header">
+    <div class="header-info">
+      <h1>40 Anos da Lavagem da Esquina do Padre</h1>
+      <span class="status-badge">100% Offline</span>
+    </div>
+    <div class="header-actions">
+      <button type="button" class="btn-header secondary" onclick="window.print()" title="Gerar PDF ou imprimir todos os quadros">
+        <span aria-hidden="true">&#128424;</span><span>PDF</span>
+      </button>
+      <button type="button" class="btn-header" onclick="toggleFullScreen()">
+        <span aria-hidden="true">&#x26F6;</span><span>Tela Cheia</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="presentation-container">
+
+    <!-- ABAS -->
+    <nav class="quadros-selector" id="tabsBar" aria-label="Navegação entre quadros">
+      <label for="tab-1" class="tab-label tab-lbl-1"><span class="tab-num">01</span>Capa</label>
+      <label for="tab-2" class="tab-label tab-lbl-2"><span class="tab-num">02</span>Tradição</label>
+      <label for="tab-3" class="tab-label tab-lbl-3"><span class="tab-num">03</span>Impacto</label>
+      <label for="tab-4" class="tab-label tab-lbl-4"><span class="tab-num">04</span>Incentivo Fiscal</label>
+      <label for="tab-5" class="tab-label tab-lbl-5"><span class="tab-num">05</span>Comunidade</label>
+      <label for="tab-6" class="tab-label tab-lbl-6"><span class="tab-num">06</span>Contrapartidas</label>
+      <label for="tab-7" class="tab-label tab-lbl-7"><span class="tab-num">07</span>Cotas</label>
+      <label for="tab-8" class="tab-label tab-lbl-8"><span class="tab-num">08</span>Encerramento</label>
+    </nav>
+
+    <!-- PROGRESSO -->
+    <div class="progress-track"><div class="progress-fill"></div></div>
+
+    <!-- ============ QUADRO 1: CAPA ============ -->
+    <section class="frame-panel" id="panel-1">
+      <div class="card-header-badge">1988 — 2027 • 40ª Edição Histórica</div>
+      <h2 class="card-main-title">40 Anos da Lavagem da Esquina do Padre</h2>
+      <div class="card-sub-title">A Maior Tradição Cultural de Caetité — Bahia</div>
+      <div class="rule-ornament"></div>
+
+      <div class="card-body-content">
+        <div class="coin-badge">
+          <span class="coin-num">40</span>
+          <span class="coin-txt">Anos</span>
+        </div>
+
+        <div style="font-family:var(--font-display);font-size:19px;font-weight:700;color:var(--wine-dark);">
+          Proposta Oficial de Patrocínio e Presença de Marca
+        </div>
+
+        <div class="company-highlight">Apresentada com Honra a: Sua Empresa / Marca</div>
+
+        <p class="quote-line">“A Lavagem é uma parte de Caetité, você também é.”</p>
+        <p style="font-size:15px;line-height:1.65;max-width:580px;color:#44403c;">
+          Quatro décadas ininterruptas unindo fé, alegria, acolhimento e a identidade do povo sertanejo.
+        </p>
+      </div>
+
+      <div class="frame-nav-bar">
+        <span class="step-counter-tag">Quadro 1 de 8</span>
+        <label for="tab-2" class="btn-step btn-step-next">
+          <span>Próximo: Tradição</span><span aria-hidden="true">&#10145;</span>
+        </label>
+      </div>
+    </section>
+
+    <!-- ============ QUADRO 2: TRADIÇÃO ============ -->
+    <section class="frame-panel" id="panel-2">
+      <div class="card-header-badge">Patrimônio Vivo • Caetité / BA</div>
+      <h2 class="card-main-title">40 Anos de Memória, Fé e Tradição</h2>
+      <div class="card-sub-title">Uma História Construída por Gerações</div>
+      <div class="rule-ornament"></div>
+
+      <div class="card-body-content">
+        <div class="info-box">
+          <h3>1988 — A 1ª Edição, o Início de uma Paixão Popular</h3>
+          <p>Nascida do encontro espontâneo de amigos na histórica Esquina do Padre, a Lavagem se consolidou como a principal manifestação festiva e cultural do Alto Sertão Produtivo Baiano.</p>
+        </div>
+
+        <div class="info-box">
+          <h3>2027 — A 40ª Edição Jubilar</h3>
+          <p>Da 1ª edição, em 1988, à 40ª, em 2027: um marco histórico sem precedentes. Reúne o cortejo das baianas, bênção ecumênica, capoeira, filarmônica e grandes atrações da música baiana e regional.</p>
+        </div>
+      </div>
+
+      <div class="frame-nav-bar">
+        <label for="tab-1" class="btn-step btn-step-prev"><span aria-hidden="true">&#11013;</span><span>Anterior</span></label>
+        <span class="step-counter-tag">Quadro 2 de 8</span>
+        <label for="tab-3" class="btn-step btn-step-next"><span>Próximo: Impacto</span><span aria-hidden="true">&#10145;</span></label>
+      </div>
+    </section>
+
+    <!-- ============ QUADRO 3: IMPACTO ============ -->
+    <section class="frame-panel" id="panel-3">
+      <div class="card-header-badge">Repercussão Regional Garantida</div>
+      <h2 class="card-main-title">O Maior Movimento Popular de Caetité</h2>
+      <div class="card-sub-title">Visibilidade Máxima para sua Empresa</div>
+      <div class="rule-ornament"></div>
+
+      <div class="card-body-content">
+        <div class="stat-row">
+          <div class="stat-item">
+            <div class="stat-val">40+ Mil</div>
+            <div class="stat-lbl">Pessoas Alcançadas</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-val">100%</div>
+            <div class="stat-lbl">Ocupação Hoteleira</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-val">30+</div>
+            <div class="stat-lbl">Cidades da Região</div>
+          </div>
+        </div>
+
+        <div class="info-box">
+          <h3>Conexão Emocional Autêntica</h3>
+          <p>Ao associar sua marca a este momento, sua empresa não faz apenas publicidade: ela celebra as raízes, o orgulho e o sentimento de pertencimento de toda a população da região.</p>
+        </div>
+      </div>
+
+      <div class="frame-nav-bar">
+        <label for="tab-2" class="btn-step btn-step-prev"><span aria-hidden="true">&#11013;</span><span>Anterior</span></label>
+        <span class="step-counter-tag">Quadro 3 de 8</span>
+        <label for="tab-4" class="btn-step btn-step-next"><span>Próximo: Incentivo Fiscal</span><span aria-hidden="true">&#10145;</span></label>
+      </div>
+    </section>
+
+    <!-- ============ QUADRO 4: INCENTIVO FISCAL ============ -->
+    <section class="frame-panel" id="panel-4">
+      <div class="card-header-badge">Incentivo Fiscal • Artigo 18</div>
+      <h2 class="card-main-title">Apoio Cultural com Custo Zero</h2>
+      <div class="card-sub-title">PRONAC 264180 • 100% de Dedução no IRPJ</div>
+      <div class="rule-ornament"></div>
+
+      <div class="card-body-content">
+        <div class="info-box" style="background:linear-gradient(180deg,#f0fdf8,#ecfdf5);border-left-color:#10b981;border-color:#bbf7d0;">
+          <h3 style="color:var(--green-deep);">Como Funciona a Dedução (Lucro Real)</h3>
+          <p><strong>1.</strong> Sua empresa destina até 4% do IRPJ devido diretamente para a realização do evento.</p>
+          <p><strong>2.</strong> 100% do valor aportado é deduzido do imposto a pagar ao governo federal.</p>
+          <p><strong>3.</strong> O custo efetivo para a empresa é <strong>R$ 0,00 (Custo Zero)</strong>, transformando imposto em exposição de marca e valorização da nossa terra.</p>
+        </div>
+
+        <div class="stat-row" style="grid-template-columns:repeat(auto-fit,minmax(140px,1fr));">
+          <div class="stat-item"><div class="stat-val">4%</div><div class="stat-lbl">Limite do IRPJ Devido</div></div>
+          <div class="stat-item"><div class="stat-val">100%</div><div class="stat-lbl">Dedução do Aporte</div></div>
+          <div class="stat-item"><div class="stat-val">R$ 0,00</div><div class="stat-lbl">Custo Efetivo</div></div>
+        </div>
+
+        <p style="font-size:13px;font-weight:700;color:var(--text-muted);">
+          Projeto devidamente aprovado pelo Ministério da Cultura sob o PRONAC 264180.
+        </p>
+      </div>
+
+      <div class="frame-nav-bar">
+        <label for="tab-3" class="btn-step btn-step-prev"><span aria-hidden="true">&#11013;</span><span>Anterior</span></label>
+        <span class="step-counter-tag">Quadro 4 de 8</span>
+        <label for="tab-5" class="btn-step btn-step-next"><span>Próximo: Comunidade</span><span aria-hidden="true">&#10145;</span></label>
+      </div>
+    </section>
+
+    <!-- ============ QUADRO 5: COMUNIDADE ============ -->
+    <section class="frame-panel" id="panel-5">
+      <div class="card-header-badge">Cultura &amp; Pertencimento</div>
+      <h2 class="card-main-title">Comunidade, Raízes e Futuro</h2>
+      <div class="card-sub-title">Por que sua Marca Deve Estar Conosco</div>
+      <div class="rule-ornament"></div>
+
+      <div class="card-body-content">
+        <div class="info-box">
+          <h3>Geração de Renda e Turismo</h3>
+          <p>A festa movimenta o comércio lojista, a rede hoteleira, restaurantes, lanchonetes, costureiras e dezenas de famílias de trabalhadores autônomos de Caetité.</p>
+        </div>
+
+        <div class="info-box">
+          <h3>Preservação do Patrimônio Imaterial</h3>
+          <p>Apoiar a Lavagem é valorizar as manifestações afro-brasileiras, o cortejo tradicional, a música e o legado dos fundadores da Esquina do Padre.</p>
+        </div>
+      </div>
+
+      <div class="frame-nav-bar">
+        <label for="tab-4" class="btn-step btn-step-prev"><span aria-hidden="true">&#11013;</span><span>Anterior</span></label>
+        <span class="step-counter-tag">Quadro 5 de 8</span>
+        <label for="tab-6" class="btn-step btn-step-next"><span>Próximo: Contrapartidas</span><span aria-hidden="true">&#10145;</span></label>
+      </div>
+    </section>
+
+    <!-- ============ QUADRO 6: CONTRAPARTIDAS ============ -->
+    <section class="frame-panel" id="panel-6">
+      <div class="card-header-badge">Retorno Institucional</div>
+      <h2 class="card-main-title">Contrapartidas de Exposição de Marca</h2>
+      <div class="card-sub-title">Ganhos Reais de Visibilidade para seu Negócio</div>
+      <div class="rule-ornament"></div>
+
+      <div class="card-body-content">
+        <div class="stat-row">
+          <div class="stat-item">
+            <div class="stat-val" style="font-size:18px;">Palco &amp; Trio</div>
+            <div class="stat-lbl">Backdrop e Telões de LED</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-val" style="font-size:18px;">Camisas</div>
+            <div class="stat-lbl">Logo nos Abadás Oficiais</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-val" style="font-size:18px;">Mídia Digital</div>
+            <div class="stat-lbl">Vídeos, Redes e Rádio</div>
+          </div>
+        </div>
+
+        <div class="info-box">
+          <h3>Relacionamento Institucional</h3>
+          <p>Acesso VIP, credenciamento especial para executivos e espaço reservado para ações da sua empresa durante os dias comemorativos.</p>
+        </div>
+      </div>
+
+      <div class="frame-nav-bar">
+        <label for="tab-5" class="btn-step btn-step-prev"><span aria-hidden="true">&#11013;</span><span>Anterior</span></label>
+        <span class="step-counter-tag">Quadro 6 de 8</span>
+        <label for="tab-7" class="btn-step btn-step-next"><span>Próximo: Cotas</span><span aria-hidden="true">&#10145;</span></label>
+      </div>
+    </section>
+
+    <!-- ============ QUADRO 7: COTAS ============ -->
+    <section class="frame-panel" id="panel-7">
+      <div class="card-header-badge">Plano de Participação</div>
+      <h2 class="card-main-title">Cotas de Patrocínio Disponíveis</h2>
+      <div class="card-sub-title">Escolha o Nível de Presença da sua Empresa</div>
+      <div class="rule-ornament"></div>
+
+      <div class="card-body-content">
+        <div class="stat-row stat-row--quotas">
+          <div class="stat-item" style="border-color:var(--gold-primary);border-width:2px;background:linear-gradient(180deg,#fffdf5,#fff);">
+            <div class="stat-val" style="color:var(--gold-primary);font-size:20px;">Cota Master</div>
+            <div class="stat-lbl">R$ 50.000 &bull; Exclusiva</div>
+          </div>
+          <div class="stat-item" style="border-color:var(--gold-bright);border-width:2px;">
+            <div class="stat-val" style="color:#b8860b;font-size:20px;">Cota Ouro</div>
+            <div class="stat-lbl">R$ 30.000</div>
+          </div>
+          <div class="stat-item" style="border-color:#94a3b8;border-width:2px;">
+            <div class="stat-val" style="color:#475569;font-size:20px;">Cota Prata</div>
+            <div class="stat-lbl">R$ 15.000</div>
+          </div>
+          <div class="stat-item" style="border-color:#cd7f32;border-width:2px;">
+            <div class="stat-val" style="color:#a9642a;font-size:20px;">Cota Bronze</div>
+            <div class="stat-lbl">R$ 5.000</div>
+          </div>
+        </div>
+
+        <div style="font-size:14px;font-weight:800;color:#7c4a03;background:var(--gold-soft);border:1px solid var(--gold-light);border-radius:12px;padding:10px 18px;">
+          Todas as cotas contam com 100% de dedução no IRPJ pelo Artigo 18.
+        </div>
+      </div>
+
+      <div class="frame-nav-bar">
+        <label for="tab-6" class="btn-step btn-step-prev"><span aria-hidden="true">&#11013;</span><span>Anterior</span></label>
+        <span class="step-counter-tag">Quadro 7 de 8</span>
+        <label for="tab-8" class="btn-step btn-step-next"><span>Próximo: Encerramento</span><span aria-hidden="true">&#10145;</span></label>
+      </div>
+    </section>
+
+    <!-- ============ QUADRO 8: ENCERRAMENTO ============ -->
+    <section class="frame-panel" id="panel-8">
+      <div class="card-header-badge">40ª Edição Jubilar • 1988 — 2027</div>
+      <h2 class="card-main-title">Venha Celebrar Conosco</h2>
+      <div class="card-sub-title">Sua Marca Gravada nos 40 Anos de História</div>
+      <div class="rule-ornament"></div>
+
+      <div class="card-body-content">
+        <div style="padding:24px;border:2px solid var(--gold-primary);border-radius:16px;background:linear-gradient(180deg,#fffdf3,#fefce8);max-width:600px;box-shadow:var(--shadow-md);">
+          <h3 style="font-family:var(--font-display);font-size:19px;font-weight:700;color:var(--wine-dark);margin-bottom:10px;line-height:1.3;">
+            Sua empresa ganha visibilidade e não gasta nada para estar ao nosso lado.
+          </h3>
+          <p style="font-size:14.5px;color:#44403c;">
+            O apoio é 100% dedutível no imposto de renda da sua empresa (Artigo 18).
+          </p>
+        </div>
+
+        <div style="text-align:center;">
+          <div style="font-family:var(--font-display);font-size:14px;font-weight:700;color:var(--navy-dark);letter-spacing:0.4px;">
+            ESQUINA DO PADRE PRODUÇÕES ARTÍSTICAS &bull; CAETITÉ — BAHIA
+          </div>
+          <div style="font-size:12px;font-weight:800;color:var(--gold-primary);margin-top:5px;">
+            PRONAC 264180 | ARTIGO 18 (LEI DE INCENTIVO À CULTURA)
+          </div>
+        </div>
+      </div>
+
+      <div class="frame-nav-bar">
+        <label for="tab-7" class="btn-step btn-step-prev"><span aria-hidden="true">&#11013;</span><span>Anterior</span></label>
+        <span class="step-counter-tag">Quadro 8 de 8</span>
+        <label for="tab-1" class="btn-step btn-step-next btn-step-restart">
+          <span aria-hidden="true">&#8635;</span><span>Voltar ao Início</span>
+        </label>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="bottom-disclaimer">
+    Lavagem da Esquina do Padre &bull; 40 Anos de Alegria e Identidade Caetiteense
+    <span class="kbd-hint">
+      Navegue com <kbd>&larr;</kbd> <kbd>&rarr;</kbd>, deslize o dedo na tela ou toque nos botões
+    </span>
+  </div>
+
+  <script>
+    function toggleFullScreen() {
+      try {
+        var el = document.documentElement;
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+          if (el.requestFullscreen) { el.requestFullscreen(); }
+          else if (el.webkitRequestFullscreen) { el.webkitRequestFullscreen(); }
+        } else {
+          if (document.exitFullscreen) { document.exitFullscreen(); }
+          else if (document.webkitExitFullscreen) { document.webkitExitFullscreen(); }
+        }
+      } catch (err) {
+        console.log('Tela cheia indisponível:', err);
+      }
+    }
+
+    (function () {
+      var TOTAL = 8;
+      var radios = [];
+      for (var i = 1; i <= TOTAL; i++) {
+        radios.push(document.getElementById('tab-' + i));
+      }
+
+      // Lê o quadro atual a partir do DOM: nunca dessincroniza com cliques nas abas
+      function currentIndex() {
+        for (var i = 0; i < TOTAL; i++) {
+          if (radios[i] && radios[i].checked) return i + 1;
+        }
+        return 1;
+      }
+
+      function goTo(n) {
+        if (n < 1 || n > TOTAL) return;
+        var radio = radios[n - 1];
+        if (!radio || radio.checked) return;
+        radio.checked = true;
+        scrollTabIntoView(n);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function scrollTabIntoView(n) {
+        var lbl = document.querySelector('.tab-lbl-' + n);
+        if (lbl && lbl.scrollIntoView) {
+          lbl.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+        }
+      }
+
+      // Mantém a aba ativa visível quando o usuário clica nas abas/botões
+      radios.forEach(function (r, idx) {
+        if (r) r.addEventListener('change', function () { if (r.checked) scrollTabIntoView(idx + 1); });
+      });
+
+      // Teclado
+      window.addEventListener('keydown', function (e) {
+        if (e.ctrlKey || e.metaKey || e.altKey) return;
+        // Se um radio está focado, o navegador já move com as setas: não duplicar
+        if (document.activeElement && document.activeElement.classList &&
+            document.activeElement.classList.contains('frame-toggle') &&
+            (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) {
+          return;
+        }
+        var cur = currentIndex();
+        if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+          e.preventDefault(); goTo(cur + 1);
+        } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+          e.preventDefault(); goTo(cur - 1);
+        } else if (e.key === 'Home') {
+          e.preventDefault(); goTo(1);
+        } else if (e.key === 'End') {
+          e.preventDefault(); goTo(TOTAL);
+        } else if (e.key >= '1' && e.key <= '8') {
+          goTo(parseInt(e.key, 10));
+        }
+      });
+
+      // Deslizar o dedo (mobile)
+      var startX = 0, startY = 0, tracking = false;
+      var container = document.querySelector('.presentation-container');
+      if (container) {
+        container.addEventListener('touchstart', function (e) {
+          if (e.touches.length !== 1) { tracking = false; return; }
+          // Não capturar o gesto quando o toque começa na barra de abas (rolagem horizontal)
+          if (e.target.closest && e.target.closest('.quadros-selector')) { tracking = false; return; }
+          startX = e.touches[0].clientX;
+          startY = e.touches[0].clientY;
+          tracking = true;
+        }, { passive: true });
+
+        container.addEventListener('touchend', function (e) {
+          if (!tracking) return;
+          tracking = false;
+          var t = e.changedTouches[0];
+          var dx = t.clientX - startX;
+          var dy = t.clientY - startY;
+          if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+          var cur = currentIndex();
+          goTo(dx < 0 ? cur + 1 : cur - 1);
+        }, { passive: true });
+      }
+    })();
+  </script>
+</body>
+</html>
