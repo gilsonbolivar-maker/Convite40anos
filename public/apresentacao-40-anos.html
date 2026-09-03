@@ -11,7 +11,7 @@
   <title>40 Anos Lavagem da Esquina do Padre • Apresentação Interativa Offline</title>
   <style>
     :root {
-      --gold-primary: #a8760a;
+      --gold-primary: #8a6108;
       --gold-bright: #d4af37;
       --gold-light: #f0d98a;
       --gold-soft: #fdf6e3;
@@ -20,8 +20,8 @@
       --navy-dark: #0f172a;
       --bg-cream: #faf6ee;
       --card-bg: #ffffff;
-      --text-dark: #1e1b18;
-      --text-muted: #57534e;
+      --text-dark: #17140f;
+      --text-muted: #45403a;
       --border-color: #ddcdb2;
       --border-soft: #ece2d0;
       --green-deep: #12693f;
@@ -123,6 +123,15 @@
     .btn-header.secondary { background: #ffffff; color: var(--wine-dark); border: 1.5px solid var(--border-color); }
     .btn-header:hover { transform: translateY(-1px); background: var(--wine-mid); color: #fff; }
 
+    /* Ampliação de leitura (botão AA) */
+    .presentation-container { zoom: var(--read-zoom, 1); }
+    #fontBtn { font-weight: 900; letter-spacing: -0.5px; }
+    #fontBtn[data-level="1"], #fontBtn[data-level="2"] {
+      background: var(--wine-dark);
+      color: #ffffff;
+      border-color: var(--wine-dark);
+    }
+
     /* ============ CONTAINER ============ */
     .presentation-container {
       width: 100%;
@@ -153,9 +162,9 @@
       border-radius: 10px;
       background: #f7f2e8;
       border: 1px solid var(--border-soft);
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 800;
-      color: #44403c;
+      color: #33302c;
       cursor: pointer;
       transition: all 0.15s ease;
       white-space: nowrap;
@@ -286,7 +295,7 @@
     }
 
     .card-sub-title {
-      font-size: clamp(10.5px, 2.4vw, 12px);
+      font-size: clamp(11.5px, 2.6vw, 13px);
       font-weight: 800;
       color: var(--gold-primary);
       text-align: center;
@@ -346,8 +355,8 @@
     }
 
     .info-box p {
-      font-size: clamp(13.5px, 2.9vw, 14.5px);
-      line-height: 1.6;
+      font-size: clamp(15px, 3.2vw, 16.5px);
+      line-height: 1.65;
       color: var(--text-dark);
       margin-bottom: 5px;
     }
@@ -408,13 +417,13 @@
 
     .benefit-item h3 {
       font-family: var(--font-display);
-      font-size: clamp(14.5px, 3.2vw, 16.5px);
+      font-size: clamp(15.5px, 3.4vw, 17.5px);
       font-weight: 700;
       color: var(--wine-dark);
       margin-bottom: 5px;
     }
     .benefit-item p {
-      font-size: clamp(12.5px, 2.8vw, 13.5px);
+      font-size: clamp(14px, 3vw, 15.5px);
       line-height: 1.55;
       color: var(--text-dark);
     }
@@ -467,10 +476,10 @@
       border-bottom: 1px dashed var(--border-soft);
     }
     .example-row:last-child { border-bottom: none; }
-    .example-lbl { font-size: clamp(12.5px, 2.8vw, 13.5px); color: var(--text-dark); }
+    .example-lbl { font-size: clamp(14px, 3vw, 15.5px); color: var(--text-dark); }
     .example-val {
       font-family: var(--font-display);
-      font-size: clamp(15px, 3.4vw, 17px);
+      font-size: clamp(16px, 3.6vw, 18.5px);
       font-weight: 700;
       color: var(--gold-primary);
       white-space: nowrap;
@@ -521,9 +530,9 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      padding: 14px clamp(8px, 2.5vw, 16px);
+      padding: 15px clamp(8px, 2.5vw, 16px);
       border-radius: 13px;
-      font-size: clamp(12px, 2.7vw, 13.5px);
+      font-size: clamp(13px, 2.9vw, 15px);
       font-weight: 800;
       cursor: pointer;
       user-select: none;
@@ -558,7 +567,7 @@
       border-radius: 10px;
       background: var(--gold-soft);
       border: 1px solid var(--border-color);
-      font-size: 12.5px;
+      font-size: 13.5px;
       font-weight: 900;
       color: var(--wine-dark);
       white-space: nowrap;
@@ -567,9 +576,9 @@
     /* ============ RODAPÉ ============ */
     .bottom-disclaimer {
       text-align: center;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 700;
-      color: #8a8178;
+      color: #5c554d;
       margin-top: 14px;
       max-width: 880px;
     }
@@ -577,7 +586,7 @@
       display: block;
       font-weight: 600;
       font-size: 11px;
-      color: #a29a90;
+      color: #5c554d;
       margin-top: 4px;
     }
     kbd {
@@ -654,6 +663,7 @@
     @media print {
       @page { size: A4 landscape; margin: 10mm; }
       body { background: #fff !important; padding: 0; display: block; }
+      .presentation-container { zoom: 1 !important; }
       .top-header, .quadros-selector, .frame-nav-bar, .progress-track, .bottom-disclaimer { display: none !important; }
       .presentation-container { max-width: 100%; gap: 0; }
       .frame-panel {
@@ -690,6 +700,9 @@
       <span class="status-badge">100% Offline</span>
     </div>
     <div class="header-actions">
+      <button type="button" class="btn-header secondary" id="fontBtn" onclick="cycleFontSize()" title="Aumentar o tamanho da letra" aria-label="Aumentar o tamanho da letra">
+        <span aria-hidden="true">A</span><span style="font-size:15px;">A</span>
+      </button>
       <button type="button" class="btn-header secondary" onclick="window.print()" title="Gerar PDF ou imprimir todos os quadros">
         <span aria-hidden="true">&#128424;</span><span>PDF</span>
       </button>
@@ -809,7 +822,7 @@
 
         <p class="quote-line">Ou seja: o valor total não aumenta. O destino de parte do imposto é que muda.</p>
 
-        <p style="font-size:12.5px;font-weight:600;color:var(--text-muted);max-width:640px;">
+        <p style="font-size:14px;font-weight:600;color:var(--text-muted);max-width:640px;">
           A utilização do benefício deve ser analisada e validada pela contabilidade da empresa, conforme seu enquadramento e a legislação aplicável.
         </p>
       </div>
@@ -890,7 +903,7 @@
           </div>
         </div>
 
-        <p style="font-size:13.5px;font-weight:700;color:#7c4a03;background:var(--gold-soft);border:1px solid var(--gold-light);border-radius:12px;padding:10px 18px;">
+        <p style="font-size:14.5px;font-weight:700;color:#6b3f02;background:var(--gold-soft);border:1px solid var(--gold-light);border-radius:12px;padding:10px 18px;">
           As contrapartidas serão definidas de acordo com cada categoria de patrocínio.
         </p>
 
@@ -908,13 +921,13 @@
         </div>
 
         <div style="text-align:center;">
-          <div style="font-family:var(--font-display);font-size:14px;font-weight:700;color:var(--navy-dark);letter-spacing:0.4px;">
+          <div style="font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--navy-dark);letter-spacing:0.4px;">
             40 ANOS DA LAVAGEM DA ESQUINA DO PADRE
           </div>
-          <div style="font-size:12px;font-weight:800;color:var(--gold-primary);margin-top:5px;">
+          <div style="font-size:13px;font-weight:800;color:var(--gold-primary);margin-top:5px;">
             PRONAC 264180 | ARTIGO 18
           </div>
-          <div style="font-size:12px;font-weight:700;color:var(--text-muted);margin-top:4px;">
+          <div style="font-size:13px;font-weight:700;color:var(--text-muted);margin-top:4px;">
             Esquina do Padre Produções Artísticas | Caetité — Bahia
           </div>
         </div>
@@ -937,6 +950,28 @@
   </div>
 
   <script>
+    var FONT_STEPS = [1, 1.15, 1.32];
+    function applyFontSize(level) {
+      document.documentElement.style.setProperty('--read-zoom', FONT_STEPS[level]);
+      var btn = document.getElementById('fontBtn');
+      if (btn) {
+        btn.dataset.level = level;
+        btn.title = level === 0 ? 'Aumentar o tamanho da letra'
+                  : level === 1 ? 'Letra grande — toque para aumentar mais'
+                                : 'Letra maior — toque para voltar ao normal';
+      }
+      try { localStorage.setItem('leituraZoom', level); } catch (e) {}
+    }
+    function cycleFontSize() {
+      var atual = parseInt(document.getElementById('fontBtn').dataset.level || '0', 10);
+      applyFontSize((atual + 1) % FONT_STEPS.length);
+    }
+    (function () {
+      var salvo = 0;
+      try { salvo = parseInt(localStorage.getItem('leituraZoom') || '0', 10) || 0; } catch (e) {}
+      applyFontSize(salvo);
+    })();
+
     function toggleFullScreen() {
       try {
         var el = document.documentElement;
