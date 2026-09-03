@@ -167,10 +167,7 @@
     #tab-2:checked ~ .presentation-container .tab-lbl-2,
     #tab-3:checked ~ .presentation-container .tab-lbl-3,
     #tab-4:checked ~ .presentation-container .tab-lbl-4,
-    #tab-5:checked ~ .presentation-container .tab-lbl-5,
-    #tab-6:checked ~ .presentation-container .tab-lbl-6,
-    #tab-7:checked ~ .presentation-container .tab-lbl-7,
-    #tab-8:checked ~ .presentation-container .tab-lbl-8 {
+    #tab-5:checked ~ .presentation-container .tab-lbl-5 {
       background: linear-gradient(135deg, var(--wine-dark), var(--wine-mid));
       border-color: var(--wine-dark);
       color: #ffffff;
@@ -180,20 +177,14 @@
     #tab-2:checked ~ .presentation-container .tab-lbl-2 .tab-num,
     #tab-3:checked ~ .presentation-container .tab-lbl-3 .tab-num,
     #tab-4:checked ~ .presentation-container .tab-lbl-4 .tab-num,
-    #tab-5:checked ~ .presentation-container .tab-lbl-5 .tab-num,
-    #tab-6:checked ~ .presentation-container .tab-lbl-6 .tab-num,
-    #tab-7:checked ~ .presentation-container .tab-lbl-7 .tab-num,
-    #tab-8:checked ~ .presentation-container .tab-lbl-8 .tab-num { color: var(--gold-light); }
+    #tab-5:checked ~ .presentation-container .tab-lbl-5 .tab-num { color: var(--gold-light); }
 
     /* Foco visível pelo teclado */
     #tab-1:focus-visible ~ .presentation-container .tab-lbl-1,
     #tab-2:focus-visible ~ .presentation-container .tab-lbl-2,
     #tab-3:focus-visible ~ .presentation-container .tab-lbl-3,
     #tab-4:focus-visible ~ .presentation-container .tab-lbl-4,
-    #tab-5:focus-visible ~ .presentation-container .tab-lbl-5,
-    #tab-6:focus-visible ~ .presentation-container .tab-lbl-6,
-    #tab-7:focus-visible ~ .presentation-container .tab-lbl-7,
-    #tab-8:focus-visible ~ .presentation-container .tab-lbl-8 {
+    #tab-5:focus-visible ~ .presentation-container .tab-lbl-5 {
       outline: 3px solid var(--gold-bright);
       outline-offset: 2px;
     }
@@ -213,14 +204,11 @@
       background: linear-gradient(90deg, var(--gold-primary), var(--gold-bright));
       transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    #tab-1:checked ~ .presentation-container .progress-fill { width: 12.5%; }
-    #tab-2:checked ~ .presentation-container .progress-fill { width: 25%; }
-    #tab-3:checked ~ .presentation-container .progress-fill { width: 37.5%; }
-    #tab-4:checked ~ .presentation-container .progress-fill { width: 50%; }
-    #tab-5:checked ~ .presentation-container .progress-fill { width: 62.5%; }
-    #tab-6:checked ~ .presentation-container .progress-fill { width: 75%; }
-    #tab-7:checked ~ .presentation-container .progress-fill { width: 87.5%; }
-    #tab-8:checked ~ .presentation-container .progress-fill { width: 100%; }
+    #tab-1:checked ~ .presentation-container .progress-fill { width: 20%; }
+    #tab-2:checked ~ .presentation-container .progress-fill { width: 40%; }
+    #tab-3:checked ~ .presentation-container .progress-fill { width: 60%; }
+    #tab-4:checked ~ .presentation-container .progress-fill { width: 80%; }
+    #tab-5:checked ~ .presentation-container .progress-fill { width: 100%; }
 
     /* ============ QUADROS ============ */
     .frame-panel {
@@ -254,10 +242,7 @@
     #tab-2:checked ~ .presentation-container #panel-2,
     #tab-3:checked ~ .presentation-container #panel-3,
     #tab-4:checked ~ .presentation-container #panel-4,
-    #tab-5:checked ~ .presentation-container #panel-5,
-    #tab-6:checked ~ .presentation-container #panel-6,
-    #tab-7:checked ~ .presentation-container #panel-7,
-    #tab-8:checked ~ .presentation-container #panel-8 {
+    #tab-5:checked ~ .presentation-container #panel-5 {
       display: flex;
       animation: fadeIn 0.28s ease-out;
     }
@@ -364,6 +349,37 @@
       margin-bottom: 5px;
     }
     .info-box p:last-child { margin-bottom: 0; }
+
+    /* Duas colunas para quadros com mais texto */
+    .col-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 12px;
+      width: 100%;
+      max-width: 640px;
+      align-items: stretch;
+    }
+
+    /* Divisor de seção dentro de um quadro */
+    .section-heading {
+      font-family: var(--font-display);
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--wine-dark);
+      width: 100%;
+      max-width: 640px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 4px;
+    }
+    .section-heading::before,
+    .section-heading::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+    }
 
     /* Grade de benefícios / categorias */
     .benefit-grid {
@@ -572,6 +588,8 @@
       .info-box { padding: 14px 15px; }
       .info-box p { font-size: 13.5px; }
       .benefit-grid { grid-template-columns: 1fr; gap: 9px; }
+      .col-2 { grid-template-columns: 1fr; gap: 9px; }
+      .section-heading { font-size: 16px; }
       .benefit-item h3 { font-size: 15px; }
       .benefit-item p { font-size: 13px; }
       .statement-block { font-size: 17px; padding: 14px 16px; }
@@ -615,9 +633,6 @@
   <input type="radio" name="frame-selector" id="tab-3" class="frame-toggle">
   <input type="radio" name="frame-selector" id="tab-4" class="frame-toggle">
   <input type="radio" name="frame-selector" id="tab-5" class="frame-toggle">
-  <input type="radio" name="frame-selector" id="tab-6" class="frame-toggle">
-  <input type="radio" name="frame-selector" id="tab-7" class="frame-toggle">
-  <input type="radio" name="frame-selector" id="tab-8" class="frame-toggle">
 
   <!-- CABEÇALHO -->
   <header class="top-header">
@@ -641,12 +656,9 @@
     <nav class="quadros-selector" id="tabsBar" aria-label="Navegação entre quadros">
       <label for="tab-1" class="tab-label tab-lbl-1"><span class="tab-num">01</span>Capa</label>
       <label for="tab-2" class="tab-label tab-lbl-2"><span class="tab-num">02</span>A Festa</label>
-      <label for="tab-3" class="tab-label tab-lbl-3"><span class="tab-num">03</span>Sua Marca</label>
-      <label for="tab-4" class="tab-label tab-lbl-4"><span class="tab-num">04</span>Vantagem Fiscal</label>
-      <label for="tab-5" class="tab-label tab-lbl-5"><span class="tab-num">05</span>Por Quê</label>
-      <label for="tab-6" class="tab-label tab-lbl-6"><span class="tab-num">06</span>Sua Marca Ganha</label>
-      <label for="tab-7" class="tab-label tab-lbl-7"><span class="tab-num">07</span>Participação</label>
-      <label for="tab-8" class="tab-label tab-lbl-8"><span class="tab-num">08</span>Encerramento</label>
+      <label for="tab-3" class="tab-label tab-lbl-3"><span class="tab-num">03</span>Vantagem Fiscal</label>
+      <label for="tab-4" class="tab-label tab-lbl-4"><span class="tab-num">04</span>Por Quê</label>
+      <label for="tab-5" class="tab-label tab-lbl-5"><span class="tab-num">05</span>Participação</label>
     </nav>
 
     <!-- PROGRESSO -->
@@ -666,65 +678,52 @@
       </div>
 
       <div class="frame-nav-bar">
-        <span class="step-counter-tag">Quadro 1 de 8</span>
-        <label for="tab-2" class="btn-step btn-step-next">
-          <span>Próximo: A Festa</span><span aria-hidden="true">&#10145;</span>
-        </label>
+        <span class="step-counter-tag">Quadro 1 de 5</span>
+        <label for="tab-2" class="btn-step btn-step-next"><span>Próximo: A Festa</span><span aria-hidden="true">&#10145;</span></label>
       </div>
     </section>
 
-    <!-- ============ QUADRO 2: A FESTA ============ -->
+    <!-- ============ QUADRO 2: A FESTA + SUA MARCA ============ -->
     <section class="frame-panel" id="panel-2">
       <div class="card-header-badge">Edição Comemorativa</div>
       <h2 class="card-main-title">São 40 anos de festa, encontros, cultura e memória</h2>
       <div class="rule-ornament"></div>
 
       <div class="card-body-content">
-        <div class="info-box">
-          <p>E para celebrar essa trajetória, a edição comemorativa chega com o espírito dos grandes carnavais de antigamente: marchinhas, ala de baianas, bumba meu boi, cortejo cultural e homenagens a personalidades que fazem parte da história da nossa cidade.</p>
+        <div class="col-2">
+          <div class="info-box">
+            <p>E para celebrar essa trajetória, a edição comemorativa chega com o espírito dos grandes carnavais de antigamente: marchinhas, ala de baianas, bumba meu boi, cortejo cultural e homenagens a personalidades que fazem parte da história da nossa cidade.</p>
+          </div>
+          <div class="info-box">
+            <p>Agora, queremos celebrar seus 40 anos ao lado de quem também constrói Caetité todos os dias: <strong>AS EMPRESAS DA NOSSA CIDADE.</strong></p>
+          </div>
         </div>
 
         <p class="quote-line">Uma festa que já tem história. Já tem significado.</p>
 
-        <div class="info-box">
-          <p>Agora, queremos celebrar seus 40 anos ao lado de quem também constrói Caetité todos os dias: <strong>AS EMPRESAS DA NOSSA CIDADE.</strong></p>
-        </div>
-      </div>
+        <div class="section-heading">Sua marca pode fazer parte desse momento</div>
 
-      <div class="frame-nav-bar">
-        <label for="tab-1" class="btn-step btn-step-prev"><span aria-hidden="true">&#11013;</span><span>Anterior</span></label>
-        <span class="step-counter-tag">Quadro 2 de 8</span>
-        <label for="tab-3" class="btn-step btn-step-next"><span>Próximo: Sua Marca</span><span aria-hidden="true">&#10145;</span></label>
-      </div>
-    </section>
-
-    <!-- ============ QUADRO 3: SUA MARCA ============ -->
-    <section class="frame-panel" id="panel-3">
-      <div class="card-header-badge">Patrocínio</div>
-      <h2 class="card-main-title">Sua marca pode fazer parte desse momento</h2>
-      <div class="rule-ornament"></div>
-
-      <div class="card-body-content">
-        <div class="info-box">
-          <p>Uma festa tradicional movimenta muito mais do que o público que participa dela. Ela movimenta comércio, serviços, artistas, profissionais, hospedagem e toda a cadeia que acompanha um grande evento.</p>
-        </div>
-
-        <div class="info-box">
-          <p>Por isso, apoiar os 40 anos da Lavagem é também uma forma de sua empresa participar de um dos momentos culturais mais importantes da cidade. E sua marca terá presença nas ações de divulgação e comunicação do evento, de acordo com a categoria de patrocínio escolhida.</p>
+        <div class="col-2">
+          <div class="info-box">
+            <p>Uma festa tradicional movimenta muito mais do que o público que participa dela. Ela movimenta comércio, serviços, artistas, profissionais, hospedagem e toda a cadeia que acompanha um grande evento.</p>
+          </div>
+          <div class="info-box">
+            <p>Por isso, apoiar os 40 anos da Lavagem é também uma forma de sua empresa participar de um dos momentos culturais mais importantes da cidade. E sua marca terá presença nas ações de divulgação e comunicação do evento, de acordo com a categoria de patrocínio escolhida.</p>
+          </div>
         </div>
 
         <p class="quote-line">É cultura. É visibilidade. É conexão com Caetité.</p>
       </div>
 
       <div class="frame-nav-bar">
-        <label for="tab-2" class="btn-step btn-step-prev"><span aria-hidden="true">&#11013;</span><span>Anterior</span></label>
-        <span class="step-counter-tag">Quadro 3 de 8</span>
-        <label for="tab-4" class="btn-step btn-step-next"><span>Próximo: Vantagem Fiscal</span><span aria-hidden="true">&#10145;</span></label>
+        <label for="tab-1" class="btn-step btn-step-prev"><span aria-hidden="true">&#11013;</span><span>Anterior</span></label>
+        <span class="step-counter-tag">Quadro 2 de 5</span>
+        <label for="tab-3" class="btn-step btn-step-next"><span>Próximo: Vantagem Fiscal</span><span aria-hidden="true">&#10145;</span></label>
       </div>
     </section>
 
-    <!-- ============ QUADRO 4: A VANTAGEM FISCAL ============ -->
-    <section class="frame-panel" id="panel-4">
+    <!-- ============ QUADRO 3: A VANTAGEM FISCAL ============ -->
+    <section class="frame-panel" id="panel-3">
       <div class="card-header-badge">PRONAC 264180 • Artigo 18</div>
       <h2 class="card-main-title">A vantagem fiscal</h2>
       <div class="rule-ornament"></div>
@@ -761,20 +760,20 @@
 
         <p class="quote-line">Ou seja: o valor total não aumenta. O destino de parte do imposto é que muda.</p>
 
-        <p style="font-size:12.5px;font-weight:600;color:var(--text-muted);max-width:620px;">
+        <p style="font-size:12.5px;font-weight:600;color:var(--text-muted);max-width:640px;">
           A utilização do benefício deve ser analisada e validada pela contabilidade da empresa, conforme seu enquadramento e a legislação aplicável.
         </p>
       </div>
 
       <div class="frame-nav-bar">
-        <label for="tab-3" class="btn-step btn-step-prev"><span aria-hidden="true">&#11013;</span><span>Anterior</span></label>
-        <span class="step-counter-tag">Quadro 4 de 8</span>
-        <label for="tab-5" class="btn-step btn-step-next"><span>Próximo: Por Quê</span><span aria-hidden="true">&#10145;</span></label>
+        <label for="tab-2" class="btn-step btn-step-prev"><span aria-hidden="true">&#11013;</span><span>Anterior</span></label>
+        <span class="step-counter-tag">Quadro 3 de 5</span>
+        <label for="tab-4" class="btn-step btn-step-next"><span>Próximo: Por Quê</span><span aria-hidden="true">&#10145;</span></label>
       </div>
     </section>
 
-    <!-- ============ QUADRO 5: POR QUE ESTAR NESSA ============ -->
-    <section class="frame-panel" id="panel-5">
+    <!-- ============ QUADRO 4: POR QUÊ + O QUE A MARCA GANHA ============ -->
+    <section class="frame-panel" id="panel-4">
       <div class="card-header-badge">Pertencimento</div>
       <h2 class="card-main-title">Por que sua empresa deve estar nessa?</h2>
       <div class="rule-ornament"></div>
@@ -782,29 +781,17 @@
       <div class="card-body-content">
         <div class="statement-block">Porque essa história também é sua.</div>
 
-        <div class="info-box">
-          <p>Sua empresa está em Caetité. Seus clientes estão em Caetité. Seus funcionários, parceiros e fornecedores fazem parte dessa comunidade.</p>
+        <div class="col-2">
+          <div class="info-box">
+            <p>Sua empresa está em Caetité. Seus clientes estão em Caetité. Seus funcionários, parceiros e fornecedores fazem parte dessa comunidade.</p>
+          </div>
+          <div class="info-box">
+            <p>E quando uma tradição da cidade chega aos seus 40 anos, as empresas que fazem parte dela também podem ajudar a escrever esse capítulo.</p>
+          </div>
         </div>
 
-        <div class="info-box">
-          <p>E quando uma tradição da cidade chega aos seus 40 anos, as empresas que fazem parte dela também podem ajudar a escrever esse capítulo.</p>
-        </div>
-      </div>
+        <div class="section-heading">Ao apoiar, sua marca ganha:</div>
 
-      <div class="frame-nav-bar">
-        <label for="tab-4" class="btn-step btn-step-prev"><span aria-hidden="true">&#11013;</span><span>Anterior</span></label>
-        <span class="step-counter-tag">Quadro 5 de 8</span>
-        <label for="tab-6" class="btn-step btn-step-next"><span>Próximo: Sua Marca Ganha</span><span aria-hidden="true">&#10145;</span></label>
-      </div>
-    </section>
-
-    <!-- ============ QUADRO 6: O QUE A MARCA GANHA ============ -->
-    <section class="frame-panel" id="panel-6">
-      <div class="card-header-badge">Retorno para o Patrocinador</div>
-      <h2 class="card-main-title">Ao apoiar, sua marca ganha:</h2>
-      <div class="rule-ornament"></div>
-
-      <div class="card-body-content">
         <div class="benefit-grid">
           <div class="benefit-item">
             <h3>Visibilidade</h3>
@@ -826,14 +813,14 @@
       </div>
 
       <div class="frame-nav-bar">
-        <label for="tab-5" class="btn-step btn-step-prev"><span aria-hidden="true">&#11013;</span><span>Anterior</span></label>
-        <span class="step-counter-tag">Quadro 6 de 8</span>
-        <label for="tab-7" class="btn-step btn-step-next"><span>Próximo: Participação</span><span aria-hidden="true">&#10145;</span></label>
+        <label for="tab-3" class="btn-step btn-step-prev"><span aria-hidden="true">&#11013;</span><span>Anterior</span></label>
+        <span class="step-counter-tag">Quadro 4 de 5</span>
+        <label for="tab-5" class="btn-step btn-step-next"><span>Próximo: Participação</span><span aria-hidden="true">&#10145;</span></label>
       </div>
     </section>
 
-    <!-- ============ QUADRO 7: CATEGORIAS ============ -->
-    <section class="frame-panel" id="panel-7">
+    <!-- ============ QUADRO 5: CATEGORIAS + ENCERRAMENTO ============ -->
+    <section class="frame-panel" id="panel-5">
       <div class="card-header-badge">Categorias de Patrocínio</div>
       <h2 class="card-main-title">Escolha como sua marca quer participar</h2>
       <div class="rule-ornament"></div>
@@ -857,29 +844,16 @@
         <p style="font-size:13.5px;font-weight:700;color:#7c4a03;background:var(--gold-soft);border:1px solid var(--gold-light);border-radius:12px;padding:10px 18px;">
           As contrapartidas serão definidas de acordo com cada categoria de patrocínio.
         </p>
-      </div>
 
-      <div class="frame-nav-bar">
-        <label for="tab-6" class="btn-step btn-step-prev"><span aria-hidden="true">&#11013;</span><span>Anterior</span></label>
-        <span class="step-counter-tag">Quadro 7 de 8</span>
-        <label for="tab-8" class="btn-step btn-step-next"><span>Próximo: Encerramento</span><span aria-hidden="true">&#10145;</span></label>
-      </div>
-    </section>
+        <div class="section-heading">40 anos não acontecem todo dia.</div>
 
-    <!-- ============ QUADRO 8: ENCERRAMENTO ============ -->
-    <section class="frame-panel" id="panel-8">
-      <div class="card-header-badge">1988 — 2027</div>
-      <h2 class="card-main-title">40 anos não acontecem todo dia.</h2>
-      <div class="rule-ornament"></div>
-
-      <div class="card-body-content">
         <div class="info-box">
           <p>A Lavagem da Esquina do Padre já atravessou quatro décadas. Já reuniu gerações. Já se tornou parte da memória de Caetité.</p>
           <p>Agora, chegou o momento de celebrar essa história com quem também faz parte dela.</p>
         </div>
 
-        <div style="padding:24px;border:2px solid var(--gold-primary);border-radius:16px;background:linear-gradient(180deg,#fffdf3,#fefce8);max-width:620px;box-shadow:var(--shadow-md);">
-          <h3 style="font-family:var(--font-display);font-size:19px;font-weight:700;color:var(--wine-dark);line-height:1.35;text-transform:uppercase;">
+        <div style="padding:20px 24px;border:2px solid var(--gold-primary);border-radius:16px;background:linear-gradient(180deg,#fffdf3,#fefce8);max-width:640px;box-shadow:var(--shadow-md);">
+          <h3 style="font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--wine-dark);line-height:1.35;text-transform:uppercase;">
             Sua empresa ganha visibilidade e não gasta nada para estar ao nosso lado.
           </h3>
         </div>
@@ -898,11 +872,9 @@
       </div>
 
       <div class="frame-nav-bar">
-        <label for="tab-7" class="btn-step btn-step-prev"><span aria-hidden="true">&#11013;</span><span>Anterior</span></label>
-        <span class="step-counter-tag">Quadro 8 de 8</span>
-        <label for="tab-1" class="btn-step btn-step-next btn-step-restart">
-          <span aria-hidden="true">&#8635;</span><span>Voltar ao Início</span>
-        </label>
+        <label for="tab-4" class="btn-step btn-step-prev"><span aria-hidden="true">&#11013;</span><span>Anterior</span></label>
+        <span class="step-counter-tag">Quadro 5 de 5</span>
+        <label for="tab-1" class="btn-step btn-step-next btn-step-restart"><span aria-hidden="true">&#8635;</span><span>Voltar ao Início</span></label>
       </div>
     </section>
 
@@ -932,7 +904,7 @@
     }
 
     (function () {
-      var TOTAL = 8;
+      var TOTAL = 5;
       var radios = [];
       for (var i = 1; i <= TOTAL; i++) {
         radios.push(document.getElementById('tab-' + i));
@@ -985,7 +957,7 @@
           e.preventDefault(); goTo(1);
         } else if (e.key === 'End') {
           e.preventDefault(); goTo(TOTAL);
-        } else if (e.key >= '1' && e.key <= '8') {
+        } else if (e.key >= '1' && e.key <= '5') {
           goTo(parseInt(e.key, 10));
         }
       });
