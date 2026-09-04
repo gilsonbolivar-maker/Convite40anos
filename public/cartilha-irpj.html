@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0d1626">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="description" content="Cartilha: direcionamento do Imposto de Renda. Guia para empresas do Lucro Real investirem até 4% do IRPJ devido em cultura. PRONAC 264180 | Artigo 18.">
+  <title>Cartilha • Direcionamento do Imposto de Renda</title>
+  <style>
+    :root {
+      --navy: #132238;
+      --navy-deep: #0d1626;
+      --navy-soft: #1e3454;
+      --gold: #d9a036;
+      --gold-ink: #8a5f10;
+      --cream: #fbf8f2;
+      --ink: #221f1c;
+      --ink-soft: #4a443d;
+      --line: #ddd6c8;
+      --emerald: #047857;
+      --rose: #be123c;
+      --display: Georgia, "Times New Roman", serif;
+      --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Courier New", monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--navy-deep);
+      color: var(--ink);
+      line-height: 1.6;
+      overflow-wrap: break-word;
+      min-height: 100vh;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 12px 12px calc(16px + env(safe-area-inset-bottom));
+    }
+
+    input[type="radio"].pg { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+    .wrap { width: 100%; max-width: 720px; zoom: var(--read-zoom, 1); }
+
+    /* ---------- barra de páginas ---------- */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      background: var(--navy);
+      border: 1px solid rgba(217, 160, 54, 0.35);
+      border-radius: 14px;
+      padding: 10px 14px;
+      margin-bottom: 10px;
+    }
+
+    .toolbar-label {
+      font-family: var(--display);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .pages { display: flex; gap: 6px; flex-wrap: wrap; }
+
+    .pg-btn {
+      width: 38px;
+      height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      background: #1b2c46;
+      border: 1px solid #33455f;
+      color: #e8e2d6;
+      font-family: var(--mono);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+    .pg-btn:hover { background: #26395a; }
+
+    #p1:checked ~ .wrap .pgb-1,
+    #p2:checked ~ .wrap .pgb-2,
+    #p3:checked ~ .wrap .pgb-3,
+    #p4:checked ~ .wrap .pgb-4,
+    #p5:checked ~ .wrap .pgb-5,
+    #p6:checked ~ .wrap .pgb-6 {
+      background: linear-gradient(135deg, #f0b544, var(--gold));
+      border-color: var(--gold);
+      color: #241701;
+    }
+
+    #p1:focus-visible ~ .wrap .pgb-1,
+    #p2:focus-visible ~ .wrap .pgb-2,
+    #p3:focus-visible ~ .wrap .pgb-3,
+    #p4:focus-visible ~ .wrap .pgb-4,
+    #p5:focus-visible ~ .wrap .pgb-5,
+    #p6:focus-visible ~ .wrap .pgb-6 { outline: 3px solid #fff; outline-offset: 2px; }
+
+    .tools { display: flex; gap: 8px; margin-left: auto; }
+
+    .tool {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 15px;
+      border-radius: 999px;
+      border: 1px solid var(--gold);
+      background: linear-gradient(135deg, #f0b544, var(--gold));
+      color: #241701;
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: filter 0.15s ease;
+    }
+    .tool.ghost { background: transparent; color: var(--gold); }
+    .tool:hover { filter: brightness(1.08); }
+    #fontBtn[data-level="1"], #fontBtn[data-level="2"] { background: linear-gradient(135deg, #f0b544, var(--gold)); color: #241701; }
+
+    /* ---------- folhas ---------- */
+    .sheet {
+      display: none;
+      border-radius: 18px;
+      overflow: hidden;
+      min-height: 560px;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: clamp(20px, 4.5vw, 40px);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+    }
+
+    #p1:checked ~ .wrap #sheet-1,
+    #p2:checked ~ .wrap #sheet-2,
+    #p3:checked ~ .wrap #sheet-3,
+    #p4:checked ~ .wrap #sheet-4,
+    #p5:checked ~ .wrap #sheet-5,
+    #p6:checked ~ .wrap #sheet-6 { display: flex; animation: fade 0.25s ease-out; }
+
+    @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+    .sheet-dark {
+      background: var(--navy);
+      background-image: radial-gradient(rgba(217, 160, 54, 0.16) 1px, transparent 1px);
+      background-size: 16px 16px;
+      color: #ffffff;
+    }
+    .sheet-light { background: var(--cream); color: var(--ink); }
+
+    /* ---------- tipografia ---------- */
+    .kicker {
+      font-family: var(--mono);
+      font-size: clamp(12px, 2.6vw, 13px);
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+    .sheet-light .kicker { color: var(--gold-ink); letter-spacing: 0.2em; }
+
+    h1 {
+      font-family: var(--display);
+      font-size: clamp(30px, 7.4vw, 50px);
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: -0.01em;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      font-family: var(--display);
+      font-size: clamp(21px, 4.8vw, 30px);
+      font-weight: 700;
+      line-height: 1.18;
+      text-transform: uppercase;
+      color: var(--navy);
+      margin: 4px 0 10px;
+    }
+
+    .bar { height: 4px; background: var(--gold); border-radius: 999px; margin: 18px 0; }
+
+    .intro {
+      font-size: clamp(15px, 3.4vw, 17px);
+      line-height: 1.6;
+      color: #e6e2da;
+      max-width: 34em;
+    }
+    .intro strong { color: #ffffff; font-weight: 700; }
+
+    .note {
+      font-size: clamp(14px, 3.1vw, 15.5px);
+      line-height: 1.6;
+      color: var(--ink-soft);
+      max-width: 40em;
+      margin-bottom: 16px;
+    }
+
+    /* capa */
+    .cover-mid { display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; margin: 26px 0; }
+    .zero-box { padding: 18px 22px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.35); background: rgba(22, 39, 64, 0.8); }
+    .zero-box p { font-size: clamp(11.5px, 2.6vw, 13px); font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase; color: var(--gold); margin-bottom: 2px; }
+    .zero-box h2 { font-family: var(--display); font-size: clamp(34px, 8vw, 52px); color: #ffffff; text-transform: uppercase; margin: 0; }
+    .circle {
+      width: clamp(112px, 27vw, 146px);
+      height: clamp(112px, 27vw, 146px);
+      border-radius: 50%;
+      border: 4px solid var(--gold);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; flex: 0 0 auto;
+    }
+    .circle b { font-family: var(--display); font-size: clamp(28px, 6.6vw, 38px); color: var(--gold); line-height: 1; }
+    .circle span { font-size: clamp(10px, 2.3vw, 11px); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #e6e2da; margin-top: 5px; }
+
+    .colofon { border-top: 1px solid rgba(255,255,255,0.28); padding-top: 16px; }
+    .colofon h3 { font-family: var(--display); font-size: clamp(14px, 3.2vw, 17px); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+    .colofon .mono { font-family: var(--mono); font-size: clamp(12px, 2.7vw, 13px); color: #ded9d0; margin-top: 3px; }
+    .colofon .it { font-family: var(--display); font-style: italic; font-size: clamp(12.5px, 2.8vw, 13.5px); color: var(--gold); margin-top: 4px; }
+
+    /* cartões */
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin: 20px 0; }
+    .card { background: #fff; border: 1px solid var(--line); border-top: 4px solid var(--gold); border-radius: 14px; padding: 14px 15px; }
+    .card.ok { border-top-color: var(--emerald); }
+    .card .num { font-family: var(--display); font-size: 26px; font-weight: 700; color: #c9c1b2; line-height: 1; }
+    .card h4 { font-size: clamp(13px, 2.9vw, 14px); font-weight: 800; text-transform: uppercase; color: var(--navy); margin: 6px 0 5px; }
+    .card p { font-size: clamp(13px, 2.9vw, 14px); line-height: 1.5; color: var(--ink-soft); }
+
+    .callout { padding: 20px; border-radius: 16px; background: var(--navy); color: #fff; }
+    .callout .kicker { color: var(--gold); margin-bottom: 8px; letter-spacing: 0.2em; }
+    .callout .big { font-size: clamp(15px, 3.4vw, 17px); font-weight: 700; line-height: 1.45; margin-bottom: 8px; }
+    .callout .it { font-family: var(--display); font-style: italic; font-size: clamp(13.5px, 3vw, 15px); color: #ded9d0; }
+    .callout.center { text-align: center; padding: 13px; font-size: clamp(13px, 3vw, 14.5px); font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold); }
+
+    /* cenários */
+    .scen { background: #fff; border: 1px solid var(--line); border-top: 4px solid var(--gold); border-radius: 14px; padding: 15px 16px; margin-bottom: 12px; }
+    .scen.bad { border-top-color: var(--rose); }
+    .scen.good { border-top-color: var(--emerald); }
+    .scen h4 { font-size: clamp(13px, 2.9vw, 14.5px); font-weight: 800; text-transform: uppercase; color: var(--navy); margin-bottom: 10px; }
+    .line { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 4px 0; font-size: clamp(13px, 2.9vw, 14.5px); color: var(--ink-soft); }
+    .line b { font-family: var(--mono); font-weight: 700; color: var(--ink); white-space: nowrap; }
+    .line b.gold { color: var(--gold-ink); }
+    .line b.bad { color: var(--rose); font-family: inherit; }
+    .split { display: flex; border-radius: 6px; overflow: hidden; margin-top: 12px; font-size: clamp(11.5px, 2.6vw, 12.5px); font-weight: 800; }
+    .split .u { background: var(--navy-soft); color: #fff; padding: 5px 10px; flex: 1; }
+    .split .g { background: var(--gold); color: #241701; padding: 5px 10px; text-align: center; flex: 0 0 auto; }
+    .total { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 8px; border-top: 1px solid #eee7db; }
+    .total span { font-size: clamp(11.5px, 2.6vw, 12.5px); font-weight: 700; text-transform: uppercase; color: #6c655b; }
+    .total b { font-family: var(--mono); font-size: clamp(14px, 3.2vw, 16px); color: var(--navy); }
+
+    /* lista numerada grande */
+    .adv { display: flex; align-items: flex-start; gap: 16px; padding: 16px 0; }
+    .adv + .adv { border-top: 1px solid var(--line); }
+    .adv .n { font-family: var(--display); font-size: clamp(30px, 7vw, 40px); font-weight: 700; color: var(--gold); line-height: 1; flex: 0 0 auto; }
+    .adv h4 { font-size: clamp(14.5px, 3.3vw, 16px); font-weight: 800; color: var(--navy); margin-bottom: 4px; }
+    .adv p { font-size: clamp(13.5px, 3vw, 15px); line-height: 1.6; color: var(--ink-soft); }
+
+    /* registro pronac */
+    .reg { display: flex; align-items: center; justify-content: space-between; gap: 14px; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; margin-bottom: 16px; }
+    .reg .lbl { font-size: clamp(11.5px, 2.6vw, 12.5px); font-weight: 700; text-transform: uppercase; color: #6c655b; }
+    .reg .val { font-family: var(--mono); font-size: clamp(16px, 3.6vw, 19px); font-weight: 800; color: var(--navy); }
+    .reg .art { font-family: var(--display); font-size: clamp(15px, 3.4vw, 18px); font-weight: 700; color: var(--gold-ink); }
+
+    .tick { width: 26px; height: 4px; background: var(--gold); border-radius: 999px; margin-bottom: 9px; }
+
+    /* passos */
+    .step { display: flex; align-items: center; gap: 12px; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 11px 13px; margin-bottom: 8px; }
+    .step .i { width: 28px; height: 28px; border-radius: 9px; background: var(--navy); color: #fff; font-family: var(--mono); font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; flex: 0 0 auto; }
+    .step span { font-size: clamp(13.5px, 3vw, 15px); font-weight: 500; color: var(--ink); }
+
+    /* rodapé da folha */
+    .foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid var(--line); padding-top: 14px; margin-top: 20px; font-family: var(--mono); font-size: clamp(11.5px, 2.6vw, 12.5px); text-transform: uppercase; color: #6c655b; }
+
+    /* navegação inferior */
+    .pager { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 10px; }
+    .nav-btn {
+      flex: 1;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      min-height: 48px; padding: 13px 14px;
+      border-radius: 12px;
+      font-size: clamp(13px, 2.9vw, 15px); font-weight: 800;
+      cursor: pointer; user-select: none;
+      background: #1b2c46; border: 1px solid #33455f; color: #e8e2d6;
+      transition: background 0.15s ease;
+    }
+    .nav-btn:hover { background: #26395a; }
+    .nav-btn.next { background: linear-gradient(135deg, #1c9e5c, #12693f); border-color: #12693f; color: #fff; }
+    .nav-btn.next:hover { filter: brightness(1.08); }
+    .counter { font-family: var(--mono); font-size: 13.5px; font-weight: 700; color: var(--gold); padding: 0 6px; white-space: nowrap; }
+
+    @media (max-width: 560px) {
+      body { padding: 8px 8px calc(12px + env(safe-area-inset-bottom)); }
+      .toolbar { padding: 9px 10px; gap: 8px; }
+      .toolbar-label { width: 100%; }
+      .tools { margin-left: 0; width: 100%; }
+      .tool { flex: 1; justify-content: center; }
+      .sheet { min-height: 0; border-radius: 14px; }
+      .cover-mid { gap: 14px; }
+      .line { flex-direction: column; gap: 0; }
+      .counter { order: -1; }
+    }
+
+    @media print {
+      @page { size: A4; margin: 12mm; }
+      body { background: #fff; padding: 0; display: block; }
+      .wrap { max-width: 100%; zoom: 1 !important; }
+      .toolbar, .pager { display: none !important; }
+      .sheet { display: flex !important; box-shadow: none; border-radius: 0; min-height: 0; break-after: page; page-break-after: always; padding: 0 0 10mm; }
+      .sheet:last-child { break-after: auto; page-break-after: auto; }
+      .sheet-dark { background: var(--navy) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+
+  <input type="radio" name="pg" id="p1" class="pg" checked>
+  <input type="radio" name="pg" id="p2" class="pg">
+  <input type="radio" name="pg" id="p3" class="pg">
+  <input type="radio" name="pg" id="p4" class="pg">
+  <input type="radio" name="pg" id="p5" class="pg">
+  <input type="radio" name="pg" id="p6" class="pg">
+
+  <div class="wrap">
+
+    <div class="toolbar">
+      <span class="toolbar-label">Páginas:</span>
+      <div class="pages">
+        <label for="p1" class="pg-btn pgb-1">1</label>
+        <label for="p2" class="pg-btn pgb-2">2</label>
+        <label for="p3" class="pg-btn pgb-3">3</label>
+        <label for="p4" class="pg-btn pgb-4">4</label>
+        <label for="p5" class="pg-btn pgb-5">5</label>
+        <label for="p6" class="pg-btn pgb-6">6</label>
+      </div>
+      <div class="tools">
+        <button type="button" class="tool ghost" id="fontBtn" onclick="cycleFontSize()" aria-label="Aumentar o tamanho da letra">A<span style="font-size:16px;">A</span></button>
+        <button type="button" class="tool" onclick="window.print()">&#128424; Salvar em PDF</button>
+      </div>
+    </div>
+
+    <!-- ===== 1 · CAPA ===== -->
+    <section class="sheet sheet-dark" id="sheet-1">
+      <div>
+        <p class="kicker">C A R T I L H A</p>
+        <h1>Direcionamento<br>do Imposto<br>de Renda</h1>
+        <div class="bar"></div>
+        <p class="intro">Guia visual para empresas do Lucro Real: como investir até <strong>4% do IRPJ devido</strong> em cultura sem gastar um centavo a mais.</p>
+
+        <div class="cover-mid">
+          <div class="zero-box">
+            <p>Custo real para a empresa</p>
+            <h2>Zero</h2>
+          </div>
+          <div class="circle">
+            <b>4%</b>
+            <span>do IRPJ devido</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="colofon">
+        <h3>40 Anos da Lavagem da Esquina do Padre</h3>
+        <p class="mono">Caetité — Bahia &nbsp;|&nbsp; PRONAC 264180 &nbsp;|&nbsp; Artigo 18</p>
+        <p class="it">Esquina do Padre Produções Artísticas</p>
+      </div>
+    </section>
+
+    <!-- ===== 2 · CAPÍTULO 01 ===== -->
+    <section class="sheet sheet-light" id="sheet-2">
+      <div>
+        <p class="kicker">Capítulo 01</p>
+        <h2>Como funciona a Lei de Incentivo</h2>
+        <p class="note">A legislação federal permite que empresas tributadas pelo Lucro Real direcionem até 4% do Imposto de Renda devido para projetos culturais aprovados pelo Governo Federal, abatendo 100% desse valor na apuração.</p>
+
+        <div class="cards">
+          <div class="card">
+            <div class="num">01</div>
+            <h4>Empresa</h4>
+            <p>Apura o IRPJ devido no regime de Lucro Real.</p>
+          </div>
+          <div class="card">
+            <div class="num">02</div>
+            <h4>Destinação</h4>
+            <p>Transfere até 4% para a conta oficial do projeto.</p>
+          </div>
+          <div class="card ok">
+            <div class="num">03</div>
+            <h4>Abatimento</h4>
+            <p>Deduz 100% do valor na guia DARF recalculada.</p>
+          </div>
+        </div>
+
+        <div class="callout">
+          <p class="kicker">P O N T O &nbsp; F U N D A M E N T A L</p>
+          <p class="big">A sua empresa NÃO paga menos imposto e NÃO gasta nada a mais. O desembolso total continua rigorosamente o mesmo.</p>
+          <p class="it">A diferença real é a quem esse dinheiro é entregue — e o retorno que ele traz para o seu negócio.</p>
+        </div>
+      </div>
+
+      <div class="foot"><span>O mecanismo legal</span><span>02 / 06</span></div>
+    </section>
+
+    <!-- ===== 3 · CAPÍTULO 02 ===== -->
+    <section class="sheet sheet-light" id="sheet-3">
+      <div>
+        <p class="kicker">Capítulo 02</p>
+        <h2>Os dois cenários</h2>
+        <p class="note">Exemplo prático para uma empresa com imposto devido de R$ 1.000.000,00.</p>
+
+        <div class="scen bad">
+          <h4>Cenário 1 — Sem patrocinar o projeto</h4>
+          <div class="line"><span>Guia (DARF) paga à Receita Federal</span><b>R$ 1.000.000,00</b></div>
+          <div class="line"><span>Destinado à cultura e ao desenvolvimento local</span><b class="bad">R$ 0,00</b></div>
+          <div class="line"><span>Retorno de imagem para a sua marca</span><b class="bad">ZERO</b></div>
+          <div class="split"><div class="u">100% para Brasília</div></div>
+          <div class="total"><span>Total pago pela empresa</span><b>R$ 1.000.000,00</b></div>
+        </div>
+
+        <div class="scen good">
+          <h4>Cenário 2 — Patrocinando os 40 Anos da Lavagem</h4>
+          <div class="line"><span>Limite legal permitido (4%)</span><b class="gold">R$ 40.000,00</b></div>
+          <div class="line"><span>Transferência para a conta oficial do projeto</span><b class="gold">R$ 40.000,00</b></div>
+          <div class="line"><span>Guia (DARF) recalculada à Receita Federal</span><b>R$ 960.000,00</b></div>
+          <div class="split"><div class="u">96% para a União</div><div class="g">4%</div></div>
+          <div class="total"><span>Total pago pela empresa</span><b>R$ 1.000.000,00</b></div>
+        </div>
+
+        <div class="callout center">Mesmo desembolso. Destino diferente.</div>
+      </div>
+
+      <div class="foot"><span>Comparativo financeiro</span><span>03 / 06</span></div>
+    </section>
+
+    <!-- ===== 4 · CAPÍTULO 03 ===== -->
+    <section class="sheet sheet-light" id="sheet-4">
+      <div>
+        <p class="kicker">Capítulo 03</p>
+        <h2>A vantagem para o empresário</h2>
+
+        <div class="adv">
+          <span class="n">01</span>
+          <div>
+            <h4>O valor final não muda</h4>
+            <p>Em vez de transferir R$ 1.000.000,00 integralmente para os cofres da União em Brasília, sua empresa envia R$ 960.000,00 ao governo e aplica R$ 40.000,00 diretamente na cidade onde seus clientes vivem.</p>
+          </div>
+        </div>
+
+        <div class="adv">
+          <span class="n">02</span>
+          <div>
+            <h4>Marketing e prestígio a custo zero</h4>
+            <p>Seu negócio ganha destaque como patrocinador oficial de um evento com 40 anos de tradição, com visibilidade em peças de divulgação, redes sociais, materiais institucionais e durante o cortejo cultural.</p>
+          </div>
+        </div>
+
+        <div class="adv">
+          <span class="n">03</span>
+          <div>
+            <h4>Dinheiro que movimenta a economia local</h4>
+            <p>O recurso permanece em Caetité gerando empregos diretos e indiretos, fortalecendo o comércio, a rede hoteleira, prestadores de serviço e os artistas da terra.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="foot"><span>Retorno institucional</span><span>04 / 06</span></div>
+    </section>
+
+    <!-- ===== 5 · CAPÍTULO 04 ===== -->
+    <section class="sheet sheet-light" id="sheet-5">
+      <div>
+        <p class="kicker">Capítulo 04</p>
+        <h2>Segurança tributária</h2>
+
+        <div class="reg">
+          <div>
+            <p class="lbl">Registro oficial</p>
+            <p class="val">PRONAC 264180</p>
+          </div>
+          <div class="art">Artigo 18</div>
+        </div>
+
+        <div class="cards">
+          <div class="card" style="border-top-color:transparent;">
+            <div class="tick"></div>
+            <h4>Dedução integral</h4>
+            <p>O valor do patrocínio é compensado em 100% no IRPJ devido pela empresa.</p>
+          </div>
+          <div class="card" style="border-top-color:transparent;">
+            <div class="tick"></div>
+            <h4>Comprovação oficial</h4>
+            <p>Emissão de Recibo Oficial de Mecenato, com total respaldo fiscal perante a Receita Federal.</p>
+          </div>
+          <div class="card" style="border-top-color:transparent;">
+            <div class="tick"></div>
+            <h4>Conta exclusiva</h4>
+            <p>O depósito é feito unicamente na conta bancária vinculada ao projeto no Banco do Brasil.</p>
+          </div>
+          <div class="card" style="border-top-color:transparent;">
+            <div class="tick"></div>
+            <h4>Monitoramento</h4>
+            <p>Movimentação e prestação de contas acompanhadas diretamente pelo Governo Federal.</p>
+          </div>
+        </div>
+
+        <div class="callout">
+          <p class="kicker">Transparência</p>
+          <p class="big" style="margin-bottom:0;">Nenhum recurso transita por contas particulares. Tudo é rastreável.</p>
+        </div>
+      </div>
+
+      <div class="foot"><span>Respaldo legal e fiscal</span><span>05 / 06</span></div>
+    </section>
+
+    <!-- ===== 6 · CAPÍTULO 05 ===== -->
+    <section class="sheet sheet-light" id="sheet-6">
+      <div>
+        <p class="kicker">Capítulo 05</p>
+        <h2>Como aplicar</h2>
+        <p class="note">Basta apresentar estas informações à contabilidade da sua empresa para que o cálculo da destinação seja validado no fechamento fiscal.</p>
+
+        <div class="step"><span class="i">1</span><span>Confirme com a contabilidade o IRPJ devido no período.</span></div>
+        <div class="step"><span class="i">2</span><span>Calcule o limite de 4% sobre esse valor.</span></div>
+        <div class="step"><span class="i">3</span><span>Solicite os dados da conta oficial do projeto (PRONAC 264180).</span></div>
+        <div class="step"><span class="i">4</span><span>Faça o depósito e receba o Recibo Oficial de Mecenato.</span></div>
+        <div class="step"><span class="i">5</span><span>Abata o valor integralmente na guia DARF do fechamento.</span></div>
+
+        <div class="callout" style="margin-top:16px;">
+          <p class="kicker">P R O J E T O</p>
+          <h3 style="font-family:var(--display);font-size:clamp(16px,3.8vw,19px);font-weight:700;text-transform:uppercase;">40 Anos da Lavagem da Esquina do Padre</h3>
+          <p class="it" style="margin-top:3px;">Esquina do Padre Produções Artísticas</p>
+          <p style="font-family:var(--mono);font-size:clamp(12px,2.7vw,13px);color:#ded9d0;margin-top:6px;">Caetité — Bahia &nbsp;|&nbsp; PRONAC 264180 &nbsp;|&nbsp; Artigo 18</p>
+        </div>
+      </div>
+
+      <div class="foot"><span>Passo a passo</span><span>06 / 06</span></div>
+    </section>
+
+    <div class="pager">
+      <label class="nav-btn" onclick="step(-1)"><span>&#11013;</span><span>Anterior</span></label>
+      <span class="counter" id="counter">1 / 6</span>
+      <label class="nav-btn next" onclick="step(1)"><span>Próxima</span><span>&#10145;</span></label>
+    </div>
+
+  </div>
+
+  <script>
+    var TOTAL = 6;
+    var radios = [];
+    for (var i = 1; i <= TOTAL; i++) radios.push(document.getElementById('p' + i));
+
+    function current() {
+      for (var i = 0; i < TOTAL; i++) if (radios[i].checked) return i + 1;
+      return 1;
+    }
+
+    function go(n) {
+      if (n < 1 || n > TOTAL || radios[n - 1].checked) return;
+      radios[n - 1].checked = true;
+      updateCounter();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function step(d) { go(current() + d); }
+
+    function updateCounter() {
+      document.getElementById('counter').textContent = current() + ' / ' + TOTAL;
+    }
+
+    radios.forEach(function (r) { r.addEventListener('change', updateCounter); });
+
+    var FONT_STEPS = [1, 1.15, 1.32];
+    function applyFontSize(level) {
+      document.documentElement.style.setProperty('--read-zoom', FONT_STEPS[level]);
+      var btn = document.getElementById('fontBtn');
+      btn.dataset.level = level;
+      btn.title = level === 0 ? 'Aumentar o tamanho da letra'
+                : level === 1 ? 'Letra grande — toque para aumentar mais'
+                              : 'Letra maior — toque para voltar ao normal';
+      try { localStorage.setItem('cartilhaZoom', level); } catch (e) {}
+    }
+    function cycleFontSize() {
+      applyFontSize((parseInt(document.getElementById('fontBtn').dataset.level || '0', 10) + 1) % FONT_STEPS.length);
+    }
+    (function () {
+      var salvo = 0;
+      try { salvo = parseInt(localStorage.getItem('cartilhaZoom') || '0', 10) || 0; } catch (e) {}
+      applyFontSize(salvo);
+      updateCounter();
+    })();
+
+    window.addEventListener('keydown', function (e) {
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      var ae = document.activeElement;
+      if (ae && ae.classList && ae.classList.contains('pg') && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) return;
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); step(1); }
+      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); step(-1); }
+      else if (e.key === 'Home') { e.preventDefault(); go(1); }
+      else if (e.key === 'End') { e.preventDefault(); go(TOTAL); }
+      else if (e.key >= '1' && e.key <= '6') { go(parseInt(e.key, 10)); }
+    });
+
+    (function () {
+      var x0 = 0, y0 = 0, on = false;
+      var wrap = document.querySelector('.wrap');
+      wrap.addEventListener('touchstart', function (e) {
+        if (e.touches.length !== 1 || (e.target.closest && e.target.closest('.toolbar'))) { on = false; return; }
+        x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; on = true;
+      }, { passive: true });
+      wrap.addEventListener('touchend', function (e) {
+        if (!on) return;
+        on = false;
+        var t = e.changedTouches[0], dx = t.clientX - x0, dy = t.clientY - y0;
+        if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+        step(dx < 0 ? 1 : -1);
+      }, { passive: true });
+    })();
+  </script>
+</body>
+</html>
