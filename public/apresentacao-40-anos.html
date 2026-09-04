@@ -663,8 +663,11 @@
     @media print {
       @page { size: A4 landscape; margin: 10mm; }
       body { background: #fff !important; padding: 0; display: block; }
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
       .presentation-container { zoom: 1 !important; }
       .top-header, .quadros-selector, .frame-nav-bar, .progress-track, .bottom-disclaimer { display: none !important; }
+      .frame-panel { animation: none !important; opacity: 1 !important; transform: none !important; }
+      .frame-panel { min-height: 86vh; }
       .presentation-container { max-width: 100%; gap: 0; }
       .frame-panel {
         display: flex !important;
