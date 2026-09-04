@@ -283,7 +283,7 @@
     .foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid var(--line); padding-top: 14px; margin-top: 20px; font-family: var(--mono); font-size: clamp(11.5px, 2.6vw, 12.5px); text-transform: uppercase; color: #6c655b; }
 
     /* navegação inferior */
-    .pager { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 10px; }
+    .pager { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 18px; }
     .nav-btn {
       flex: 1;
       display: inline-flex; align-items: center; justify-content: center; gap: 8px;
@@ -295,9 +295,13 @@
       transition: background 0.15s ease;
     }
     .nav-btn:hover { background: #26395a; }
+    .sheet-light .nav-btn { background: #fff; border-color: var(--line); color: var(--navy); }
+    .sheet-light .nav-btn:hover { background: #f2ece0; }
+    .sheet-light .nav-btn.next { background: linear-gradient(135deg, #1c9e5c, #12693f); border-color: #12693f; color: #fff; }
     .nav-btn.next { background: linear-gradient(135deg, #1c9e5c, #12693f); border-color: #12693f; color: #fff; }
     .nav-btn.next:hover { filter: brightness(1.08); }
-    .counter { font-family: var(--mono); font-size: 13.5px; font-weight: 700; color: var(--gold); padding: 0 6px; white-space: nowrap; }
+    .counter { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--gold-ink); padding: 0 8px; white-space: nowrap; }
+    .sheet-dark .counter { color: var(--gold); }
 
     @media (max-width: 560px) {
       body { padding: 8px 8px calc(12px + env(safe-area-inset-bottom)); }
@@ -308,7 +312,8 @@
       .sheet { min-height: 0; border-radius: 14px; }
       .cover-mid { gap: 14px; }
       .line { flex-direction: column; gap: 0; }
-      .counter { order: -1; }
+      .pager { flex-wrap: wrap; }
+      .counter { order: 3; width: 100%; text-align: center; }
     }
 
     @media print {
@@ -374,6 +379,11 @@
         <p class="mono">Caetité — Bahia &nbsp;|&nbsp; PRONAC 264180 &nbsp;|&nbsp; Artigo 18</p>
         <p class="it">Esquina do Padre Produções Artísticas</p>
       </div>
+
+      <div class="pager">
+        <span class="counter">1 / 6</span>
+        <label for="p2" class="nav-btn next"><span>Próxima</span><span aria-hidden="true">&#10145;</span></label>
+      </div>
     </section>
 
     <!-- ===== 2 · CAPÍTULO 01 ===== -->
@@ -409,6 +419,12 @@
       </div>
 
       <div class="foot"><span>O mecanismo legal</span><span>02 / 06</span></div>
+
+      <div class="pager">
+        <label for="p1" class="nav-btn"><span aria-hidden="true">&#11013;</span><span>Anterior</span></label>
+        <span class="counter">2 / 6</span>
+        <label for="p3" class="nav-btn next"><span>Próxima</span><span aria-hidden="true">&#10145;</span></label>
+      </div>
     </section>
 
     <!-- ===== 3 · CAPÍTULO 02 ===== -->
@@ -440,6 +456,12 @@
       </div>
 
       <div class="foot"><span>Comparativo financeiro</span><span>03 / 06</span></div>
+
+      <div class="pager">
+        <label for="p2" class="nav-btn"><span aria-hidden="true">&#11013;</span><span>Anterior</span></label>
+        <span class="counter">3 / 6</span>
+        <label for="p4" class="nav-btn next"><span>Próxima</span><span aria-hidden="true">&#10145;</span></label>
+      </div>
     </section>
 
     <!-- ===== 4 · CAPÍTULO 03 ===== -->
@@ -474,6 +496,12 @@
       </div>
 
       <div class="foot"><span>Retorno institucional</span><span>04 / 06</span></div>
+
+      <div class="pager">
+        <label for="p3" class="nav-btn"><span aria-hidden="true">&#11013;</span><span>Anterior</span></label>
+        <span class="counter">4 / 6</span>
+        <label for="p5" class="nav-btn next"><span>Próxima</span><span aria-hidden="true">&#10145;</span></label>
+      </div>
     </section>
 
     <!-- ===== 5 · CAPÍTULO 04 ===== -->
@@ -520,6 +548,12 @@
       </div>
 
       <div class="foot"><span>Respaldo legal e fiscal</span><span>05 / 06</span></div>
+
+      <div class="pager">
+        <label for="p4" class="nav-btn"><span aria-hidden="true">&#11013;</span><span>Anterior</span></label>
+        <span class="counter">5 / 6</span>
+        <label for="p6" class="nav-btn next"><span>Próxima</span><span aria-hidden="true">&#10145;</span></label>
+      </div>
     </section>
 
     <!-- ===== 6 · CAPÍTULO 05 ===== -->
@@ -544,13 +578,13 @@
       </div>
 
       <div class="foot"><span>Passo a passo</span><span>06 / 06</span></div>
-    </section>
 
-    <div class="pager">
-      <label class="nav-btn" onclick="step(-1)"><span>&#11013;</span><span>Anterior</span></label>
-      <span class="counter" id="counter">1 / 6</span>
-      <label class="nav-btn next" onclick="step(1)"><span>Próxima</span><span>&#10145;</span></label>
-    </div>
+      <div class="pager">
+        <label for="p5" class="nav-btn"><span aria-hidden="true">&#11013;</span><span>Anterior</span></label>
+        <span class="counter">6 / 6</span>
+        <label for="p1" class="nav-btn next"><span aria-hidden="true">&#8635;</span><span>Voltar ao início</span></label>
+      </div>
+    </section>
 
   </div>
 
@@ -567,17 +601,10 @@
     function go(n) {
       if (n < 1 || n > TOTAL || radios[n - 1].checked) return;
       radios[n - 1].checked = true;
-      updateCounter();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function step(d) { go(current() + d); }
-
-    function updateCounter() {
-      document.getElementById('counter').textContent = current() + ' / ' + TOTAL;
-    }
-
-    radios.forEach(function (r) { r.addEventListener('change', updateCounter); });
 
     var FONT_STEPS = [1, 1.15, 1.32];
     function applyFontSize(level) {
@@ -596,7 +623,6 @@
       var salvo = 0;
       try { salvo = parseInt(localStorage.getItem('cartilhaZoom') || '0', 10) || 0; } catch (e) {}
       applyFontSize(salvo);
-      updateCounter();
     })();
 
     window.addEventListener('keydown', function (e) {
