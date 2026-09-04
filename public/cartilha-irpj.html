@@ -303,17 +303,61 @@
     .counter { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--gold-ink); padding: 0 8px; white-space: nowrap; }
     .sheet-dark .counter { color: var(--gold); }
 
-    @media (max-width: 560px) {
-      body { padding: 8px 8px calc(12px + env(safe-area-inset-bottom)); }
-      .toolbar { padding: 9px 10px; gap: 8px; }
-      .toolbar-label { width: 100%; }
-      .tools { margin-left: 0; width: 100%; }
-      .tool { flex: 1; justify-content: center; }
-      .sheet { min-height: 0; border-radius: 14px; }
-      .cover-mid { gap: 14px; }
-      .line { flex-direction: column; gap: 0; }
-      .pager { flex-wrap: wrap; }
-      .counter { order: 3; width: 100%; text-align: center; }
+    /* ---------- celular: uma página por tela ---------- */
+    @media (max-width: 640px) {
+      body { padding: 6px 6px calc(6px + env(safe-area-inset-bottom)); }
+
+      /* cabeçalho em uma linha só */
+      .toolbar {
+        padding: 6px 8px;
+        gap: 6px;
+        margin-bottom: 6px;
+        border-radius: 11px;
+        flex-wrap: nowrap;
+      }
+      .toolbar-label { display: none; }
+      .pages { gap: 4px; flex-wrap: nowrap; }
+      .pg-btn { width: 31px; height: 31px; border-radius: 8px; font-size: 13.5px; }
+      .tools { margin-left: auto; gap: 5px; }
+      .tool { padding: 7px 9px; font-size: 13px; }
+      .tool .txt { display: none; }
+
+      /* a folha ocupa a altura restante da tela */
+      .wrap { display: flex; flex-direction: column; height: calc(100svh - 12px); }
+      .sheet { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; border-radius: 13px; padding: 16px 15px 0; }
+      .sheet > div:first-child { flex: 1; zoom: var(--fit, 1); }
+
+      /* navegação sempre à vista, colada no pé da folha */
+      .pager {
+        position: sticky;
+        bottom: 0;
+        margin-top: 14px;
+        padding: 10px 0 12px;
+        background: var(--cream);
+      }
+      .sheet-dark .pager { background: var(--navy); }
+      .nav-btn { min-height: 44px; padding: 10px 12px; }
+
+      /* conteúdo mais justo, sem encolher a letra */
+      h1 { font-size: clamp(26px, 8vw, 34px); }
+      .bar { margin: 12px 0; }
+      .cover-mid { gap: 12px; margin: 16px 0; }
+      .cards { gap: 9px; margin: 14px 0; }
+      .card { padding: 11px 12px; }
+      .scen { padding: 12px 13px; margin-bottom: 9px; }
+      .adv { padding: 12px 0; gap: 12px; }
+      .step { padding: 9px 11px; margin-bottom: 6px; }
+      .callout { padding: 14px 15px; }
+      .reg { padding: 11px 13px; margin-bottom: 12px; }
+      .line { flex-direction: column; gap: 0; padding: 3px 0; }
+      .foot { margin-top: 14px; padding-top: 10px; }
+    }
+
+    /* telas bem estreitas */
+    @media (max-width: 380px) {
+      .pg-btn { width: 28px; height: 28px; font-size: 12.5px; }
+      .tool { padding: 6px 8px; }
+      .sheet { padding: 14px 12px 0; }
     }
 
     @media print {
@@ -323,7 +367,10 @@
       .wrap { max-width: 100%; zoom: 1 !important; }
       .toolbar, .pager { display: none !important; }
       .sheet { animation: none !important; opacity: 1 !important; transform: none !important; }
-      .sheet { min-height: 86vh; }
+      .sheet { min-height: 86vh; height: auto !important; overflow: visible !important; }
+      .sheet > div:first-child { zoom: 1 !important; }
+      .wrap { height: auto !important; display: block !important; }
+      .pager { position: static !important; }
       .sheet { display: flex !important; box-shadow: none; border-radius: 0; min-height: 0; break-after: page; page-break-after: always; padding: 0 0 10mm; }
       .sheet:last-child { break-after: auto; page-break-after: auto; }
       .sheet-dark {
@@ -359,7 +406,7 @@
       </div>
       <div class="tools">
         <button type="button" class="tool ghost" id="fontBtn" onclick="cycleFontSize()" aria-label="Aumentar o tamanho da letra">A<span style="font-size:16px;">A</span></button>
-        <button type="button" class="tool" onclick="window.print()">&#128424; Salvar em PDF</button>
+        <button type="button" class="tool" onclick="window.print()" title="Salvar em PDF"><span aria-hidden="true">&#128424;</span><span class="txt">Salvar em PDF</span></button>
       </div>
     </div>
 
@@ -624,6 +671,7 @@
                 : level === 1 ? 'Letra grande — toque para aumentar mais'
                               : 'Letra maior — toque para voltar ao normal';
       try { localStorage.setItem('cartilhaZoom', level); } catch (e) {}
+      if (typeof fitPage === 'function') setTimeout(fitPage, 0);
     }
     function cycleFontSize() {
       applyFontSize((parseInt(document.getElementById('fontBtn').dataset.level || '0', 10) + 1) % FONT_STEPS.length);
@@ -633,6 +681,43 @@
       try { salvo = parseInt(localStorage.getItem('cartilhaZoom') || '0', 10) || 0; } catch (e) {}
       applyFontSize(salvo);
     })();
+
+    /* Encolhe o conteúdo da página só o suficiente para caber na tela do
+       celular, no limite de 18%. Se nem assim couber, a página rola. */
+    // telas curtas (iPhone SE e afins) podem encolher um pouco mais
+    function minFit() { return window.innerHeight < 700 ? 0.72 : 0.82; }
+    function fitPage() {
+      var sheet = null;
+      for (var i = 0; i < TOTAL; i++) {
+        var el = document.getElementById('sheet-' + (i + 1));
+        if (getComputedStyle(el).display !== 'none') { sheet = el; break; }
+      }
+      if (!sheet) return;
+      var corpo = sheet.firstElementChild;
+      if (!corpo) return;
+
+      if (window.innerWidth > 640) { corpo.style.removeProperty('--fit'); return; }
+
+      corpo.style.setProperty('--fit', 1);
+      if (sheet.scrollHeight - sheet.clientHeight <= 2) return;
+
+      // duas passadas: a primeira estima, a segunda corrige o resíduo
+      var MIN_FIT = minFit();
+      var escala = 1;
+      for (var passo = 0; passo < 3; passo++) {
+        var sobra = sheet.scrollHeight - sheet.clientHeight;
+        if (sobra <= 2) break;
+        escala = Math.max(MIN_FIT, escala * (sheet.clientHeight / sheet.scrollHeight) * 0.995);
+        corpo.style.setProperty('--fit', escala.toFixed(3));
+        if (escala <= MIN_FIT) break;
+      }
+    }
+
+    radios.forEach(function (r) { r.addEventListener('change', function () { setTimeout(fitPage, 0); }); });
+    window.addEventListener('resize', fitPage);
+    window.addEventListener('orientationchange', function () { setTimeout(fitPage, 250); });
+    window.addEventListener('load', fitPage);
+    setTimeout(fitPage, 60);
 
     window.addEventListener('keydown', function (e) {
       if (e.ctrlKey || e.metaKey || e.altKey) return;
